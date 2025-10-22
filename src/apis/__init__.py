@@ -1,0 +1,16 @@
+from flask_restx import Api
+
+from .auth import api as auth_ns
+from .auth import jwt
+
+
+# TODO: make configurable
+api = Api(
+    title="Lagersystem API",
+    version="1.0",
+    description="Largersystem API",
+    doc="/docs"  # Swagger UI endpoint
+)
+
+api.add_namespace(auth_ns)
+# Add more endpoints here
