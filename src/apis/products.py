@@ -15,7 +15,7 @@ class Product(Resource):
     @api.doc('Get product based on ID')
     @api.expect(get_product_model)
     def get(self):
-        ID = api.payload('ID')
+        ID = api.payload["ID"]
         result = product_list[ID]
         return jsonify({'product': result})
     
