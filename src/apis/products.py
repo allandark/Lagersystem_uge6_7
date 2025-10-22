@@ -7,19 +7,19 @@ api: Namespace = Namespace("product", description="Product namespace", authoriza
 
 product_list = list(("aluminium", "banana", "apple", "car"))
 
-get_product_model: Model = api.model('ProductModel', {
-        'ID': fields.Integer(required=True, description='ID of product')})
+new_product_model: Model = api.model('ProductModel', {
+        'name': fields.String(required=True, description='Name of product')})
 
 @api.route("/product")
 class Product(Resource):
     @api.doc('Get product based on ID')
-    @api.expect(get_product_model)
     def get(self):
-        ID = api.payload["ID"]
-        result = product_list[ID]
-        return jsonify({'product': result})
+        return jsonify({'product': product_list})
     
-    def put(self, product):
+    @api.doc('Add new product')
+    @api.expect(new_product_model)
+    def put(self):
+        product = api.payload['name']
         product_list.append(product)
         return jsonify({'New product': product_list})
 
