@@ -26,6 +26,7 @@ create table customers(
     navn varchar(255) not null,
     email varchar(255) not null,
     PRimary key (customerid)
+    UNIQUE (email)
 
 );
 create table orders (
