@@ -2,7 +2,7 @@ from flask_restx import Api
 
 from .auth import api as auth_ns
 from .auth import jwt
-
+from .warehouse import api as warehouse_ns
 
 # TODO: make configurable
 api = Api(
@@ -13,4 +13,5 @@ api = Api(
 )
 
 api.add_namespace(auth_ns)
+api.add_namespace(warehouse_ns)
 # Add more endpoints here
