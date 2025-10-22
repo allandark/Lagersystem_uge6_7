@@ -25,7 +25,7 @@ create table customers(
 	customerid int not null AUTO_INCREMENT,
     navn varchar(255) not null,
     email varchar(255) not null,
-    PRimary key (customerid)
+    PRimary key (customerid),
     UNIQUE (email)
 
 );
@@ -36,10 +36,13 @@ create table orders (
     customerid int not null,
     status varchar(55),
     mængde int not null,
+    lagerID int not null,
     PRimary key (OrderID),
     
     FOREIGN KEY (produktID) REFERENCES Produkts(produktID),
-    FOREIGN KEY (customerid) REFERENCES customers(customerid)
+    FOREIGN KEY (customerid) REFERENCES customers(customerid),
+    FOREIGN KEY (customerid) REFERENCES customers(customerid),
+    FOREIGN key (lagerID) REFERENCES lagers(lagerID)
 );
 
 create table admin(

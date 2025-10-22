@@ -64,23 +64,23 @@ value("dennis","dennis@test.com");
 insert into customers(navn,email)
 value("Viktor","Viktor@test.com");
 
+insert into orders(produktID,invoicenummer,customerid,status,mængde,lagerID)
+value(5,1000,1,"good",10,1);
 insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(5,1000,1,"good",10);
+value(1,1004,4,"good",4,2);
 insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(1,1004,4,"good",4);
+value(2,1004,4,"good",3,2);
 insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(2,1004,4,"good",3);
+value(5,1003,3,"good",30,3);
 insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(5,1003,3,"good",30);
+value(5,1003,3,"bad",12,3);
 insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(5,1003,3,"bad",12);
+value(2,1003,3,"good",1,3);
 insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(2,1003,3,"good",1);
+value(3,1002,2,"good",4,1);
 insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(3,1002,2,"good",4);
+value(5,1002,2,"good",12,1);
 insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(5,1002,2,"good",12);
+value(3,1002,2,"good",14,1);
 insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(3,1002,2,"good",14);
-insert into orders(produktID,invoicenummer,customerid,status,mængde)
-value(2,1002,2,"good",11);
+value(2,1002,2,"good",11,1);
