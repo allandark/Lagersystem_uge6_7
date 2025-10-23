@@ -39,57 +39,37 @@ pip install -r requirements.txt
 * Run the file by pressing F5 on your keyboard.
 * In the terminal, if everything works, you will see a line saying "Running on http://###.#.#.#:5000". Copy this address into your preferred web browser and write "/docs" at the end, so it looks like this: http://###.#.#.#:5000/docs
 * Press Enter to go to the website.
-* Step-by-step bullets
+* Right now, the website is under development. Because of this, you will see two namespaces: auth and product.
 ```
 code blocks for commands
 ```
 
 ## Help
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
+We don't have any help files for this project yet.
 
 ## Authors
 
 Contributors names and contact info
 
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+Dennis Armtoft Jensen 
+[@allandark](https://github.com/allandark)
+Luke Sinclair
+[@thelumss](https://github.com/Thelumss)
+Viktor Hugo Hersom From
+[@jameswebbtelescope](https://github.com/JamesWebbTelescope)
 
 ## Version History
 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release
+* 1.0
+* * Development version including authentication and product endpoints
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the LICENSE.md file for details
 
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
-
-# Lagersystem
-
-
-## Build
-
-```
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-**Run**  
-```
-python src/main.py
-```
+* https://www.geeksforgeeks.org/python/how-to-run-a-flask-application/
+* https://github.com/JamesWebbTelescope/uge-3
