@@ -7,13 +7,14 @@ api: Namespace = Namespace("customer", description="Customer namespace", authori
 
 customer_dict = dict({1 : "Viktor", 2 : "Dennis", 3: "Luke"})
 
-get_customer_model: Model = api.model('GetCustomerModel', {'id': fields.Integer(required=True, description='Customer ID number')})
+get_customer_model: Model = api.model('GetCustomerModel', {'id': fields.Integer(required=True, description='Customer ID number'),
+                                        'name': fields.String(required=True, description='Name of customer')})
 
-@api.route("/customer/<int:id>")
+@api.route("/customer/<int:id>&<string:name>")
 class Customer(Resource):
     
     @api.doc('Get the customer based on the ID number')
     @api.marshal_with(get_customer_model, code = 200)
-    def get(self, id):
+    def get(self, id, name):
         customer = customer_dict[id]
-        return jsonify({'message': customer})
+        return jsonify(customer), 200
