@@ -1,8 +1,8 @@
 from flask_restx import Api
 
-from .auth import api as auth_ns
-from .auth import jwt
-from .products import api as product_ns
+from apis.auth import api as auth_ns
+from apis.auth import jwt
+from apis.products import api as product_ns
 
 
 # TODO: make configurable
