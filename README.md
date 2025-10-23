@@ -4,7 +4,7 @@ A simple warehouse management system that can be used for tracking orders, order
 
 ## Description
 
-This is a group project utilizing a MySQL server to simulate keeping track of orders and warehouse statuses. It's useful for a variety of scenarios, including online shops, warehouse management systems, postal services, etc.
+This is a RESTful API utilizing a MySQL server to simulate keeping track of orders and warehouse statuses. It's useful for a variety of scenarios, including online shops, warehouse management systems, postal services, etc.
 
 ## Getting Started
 
