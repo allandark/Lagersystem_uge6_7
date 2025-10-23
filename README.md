@@ -31,7 +31,7 @@ This is a RESTful API utilizing a MySQL server to simulate keeping track of orde
 ```
 pip install -r requirements.txt
 ```
-
+* This will install all the necessary libraries for running the program
 ### Executing program
 
 * In Visual Studio Code:
