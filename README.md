@@ -10,8 +10,9 @@ This is a RESTful API utilizing a MySQL server to simulate keeping track of orde
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* Windows 11
+* Visual Studio Code 2022
+* Python 3.11
 
 ### Installing
 
@@ -33,7 +34,11 @@ pip install -r requirements.txt
 
 ### Executing program
 
-* How to run the program
+* In Visual Studio Code:
+* Open the file __init__.py.
+* Run the file by pressing F5 on your keyboard.
+* In the terminal, if everything works, you will see a line saying "Running on http://###.#.#.#:5000". Copy this address into your preferred web browser and write "/docs" at the end, so it looks like this: http://###.#.#.#:5000/docs
+* Press Enter to go to the website.
 * Step-by-step bullets
 ```
 code blocks for commands
