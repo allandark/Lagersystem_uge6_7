@@ -30,6 +30,12 @@ def productsGetbyPrise(pris):
 
     myresult = mycursor.fetchall()
 
+def productsGetbyPriseubterval(lov_price,high_price):
+    mycursor = mydb.cursor()
+
+    mycursor.execute(f"SELECT * FROM produkts WHERE pris BETWEEN %s AND %s" , (lov_price,high_price))
+
+    myresult = mycursor.fetchall()
 
 def insertproduct(name, price):
 
