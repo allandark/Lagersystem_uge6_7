@@ -41,7 +41,24 @@ pip install -r requirements.txt
 * Press Enter to go to the website.
 * Right now, the website is under development. Because of this, you will see two namespaces: auth and product.
 ```
-code blocks for commands
+python src/app.py
+```
+
+### Tests
+The project uses the package `pytest` to perform unit- and integration-tests.
+* Open terminal (powershell/bash)
+* Go to Project Root Directory
+* Run the command (all tests)
+```
+pytest
+```
+* Run the command (unit tests)
+```
+pytest tests/unit
+```
+* Run the command (integration tests)
+```
+pytest tests/integration
 ```
 
 ## Help
