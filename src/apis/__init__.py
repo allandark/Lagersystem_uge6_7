@@ -3,6 +3,7 @@ from flask_restx import Api
 from apis.auth import api as auth_ns
 from apis.auth import jwt
 from apis.products import api as product_ns
+from apis.customer import api as customer_ns
 
 
 # TODO: make configurable
@@ -15,4 +16,5 @@ api = Api(
 
 api.add_namespace(auth_ns)
 api.add_namespace(product_ns)
+api.add_namespace(customer_ns)
 # Add more endpoints here
