@@ -2,18 +2,23 @@ from flask import Flask
 from werkzeug.middleware.proxy_fix import ProxyFix
 from apis import api, jwt
 
-# Create App
-app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app)
 
-# TODO: Move to safe config file
-app.config["JWT_SECRET_KEY"] = "this is a secret"
+def create_app():
+    # Create App
+    app = Flask(__name__)
+    app.wsgi_app = ProxyFix(app.wsgi_app)
 
-# Init endpoints
-api.init_app(app)
+    # TODO: Move to safe config file
+    app.config["JWT_SECRET_KEY"] = "this is a secret"
 
-# json webtoken manager
-jwt.init_app(app)
+    # Init endpoints
+    api.init_app(app)
+
+    # json webtoken manager
+    jwt.init_app(app)
+    return app
 
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True)

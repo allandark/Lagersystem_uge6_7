@@ -2,6 +2,7 @@ from flask_restx import Namespace, Resource, fields, Model
 from flask_jwt_extended import jwt_required
 from apis.auth import authorizations
 
+from core.utils import parse_int, parse_dict_key
 
 api: Namespace = Namespace("warehouse", description="Warehouse namespace", authorizations=authorizations)
 
@@ -57,6 +58,16 @@ class WarehouseList(Resource):
     @api.expect(warehouse_model)
     @api.marshal_with(warehouse_model, code=200)
     def post(self):
+        id = parse_dict_key(api.payload, 'id')
+        name = parse_dict_key(api.payload, 'name')
+        if not id or not name:
+            return {"error": "invalid body"}, 400
+
+        id = parse_int(id)
+        if not id:
+            return {"error": "invalid id"}, 400
+        if not api.payload['name']:
+            return {"error": "empty name is not allowed"}, 400
         wh = {
             "id": len(warehouses),
             "name": api.payload['name']
@@ -132,7 +143,21 @@ class InventoryDetail(Resource):
     @api.expect(warehouse_item_model)
     @api.marshal_with(warehouse_item_model)
     def post(self,id):
-        wh = next((w for w in warehouses if w['id'] == id), None)
+        # check for key errors
+        product_id = parse_dict_key(api.payload, 'product_id')
+        warehouse_id = parse_dict_key(api.payload, 'warehouse_id')
+        quantity = parse_dict_key(api.payload, 'quantity')
+        # check for value errors
+        id_= parse_int(id)
+        product_id = parse_int(product_id)
+        warehouse_id = parse_int(warehouse_id)
+        quantity = parse_int(quantity)
+        if id_ is None or\
+            product_id is None or\
+            warehouse_id  is None or\
+            quantity is None:
+            return {"error": "bad request"}, 400
+        wh = next((w for w in warehouses if w['id'] == id_), None)
         if not wh:
             return {"error": "warehouse not found"}, 404
 
@@ -195,5 +220,5 @@ class InventoryList(Resource):
             if w['id'] == item_id:
                 del warehouse_items[i]
                 break
-            
+
         return {"message": "inventory deleted"}, 200
