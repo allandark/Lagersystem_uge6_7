@@ -45,6 +45,7 @@ admin_user: dict[str] = {
             "username": "admin",
             "password_hash": generate_password_hash("Password12!")
         }
+
 test_users.append(admin_user)
 
 @api.route('/')
