@@ -15,12 +15,21 @@ This is a RESTful API utilizing a MySQL server to simulate keeping track of orde
 
 ### Installing
 
-'''
+* Download the code as a .zip-folder.
+* Navigate to the folder, where you downloaded it.
+* Open a Python terminal.
+* In the terminal, create a virtual environment:
+  ```
+  python -m venv .venv
+  ```
+* Once that has been done, activate the virtual environment:
+```
+.\.venv\Scripts\Activate.ps1
+```
+* When the virtual environment has been activated, run this command:
+```
 pip install -r requirements.txt
-'''
-
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+```
 
 ### Executing program
 
