@@ -4,7 +4,7 @@ A simple warehouse management system that can be used for tracking orders, order
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+This is a group project utilizing a MySQL server to simulate keeping track of orders and warehouse statuses. It's useful for a variety of scenarios, including 
 
 ## Getting Started
 
@@ -14,6 +14,10 @@ An in-depth paragraph about your project and overview of use.
 * ex. Windows 10
 
 ### Installing
+
+'''
+pip install -r requirements.txt
+'''
 
 * How/where to download your program
 * Any modifications needed to be made to files/folders
