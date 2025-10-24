@@ -15,6 +15,7 @@ class ProductModel:
             return myresult
         except Exception as e:
             print("Error getting product:", e)
+            return False
 
     def GetbyId(self, id):
         
@@ -27,6 +28,7 @@ class ProductModel:
         
         except Exception as e:
             print("Error getting product by id:", e)
+            return False
 
     def GetbyPrise(self, pris):
         
@@ -38,6 +40,7 @@ class ProductModel:
             return myresult
         except Exception as e:
             print("Error getting product by price:", e)
+            return False
 
     def GetPricebyiterval(self, lov_price,high_price):
         
@@ -49,6 +52,7 @@ class ProductModel:
             return myresult
         except Exception as e:
             print("Error getting product in price interval:", e)
+            return False
             
     def insertproduct(self, name, price):
         
@@ -72,7 +76,8 @@ class ProductModel:
             return myresult
         except Exception as e:
             print("Error getting product by name:", e)
-
+            return False
+        
     def exist(self,id):
         try:
             self.db.execute(f"SELECT exists(select 1 from produkts where produktID = %s)AS id_exists ", (id,))
@@ -85,4 +90,4 @@ class ProductModel:
                 return True
         except Exception as e:
             print("Error checking if product exist by id:", e)
-
+            return False
