@@ -4,11 +4,12 @@ from apis import api, jwt
 from Database_commands.database_mangment import Database_mangment
 
 
-dbManger = Database_mangment(host = "localhost", user = "root", password="",dbName="lagersystem")
+
 
 
 def create_app():
     # Create App
+    dbManger = Database_mangment(host = "localhost", user = "root", password="",dbName="lagersystem")
     app = Flask(__name__)
     app.wsgi_app = ProxyFix(app.wsgi_app)
 
