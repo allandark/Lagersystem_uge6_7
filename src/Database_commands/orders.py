@@ -80,7 +80,7 @@ def orderUpdateStatus(OrderID,newStatus):
     mycursor.execute(query, (newStatus, OrderID))
     mydb.commit()
 
-def ordercustomerview(OrderID):
+def ordercustomerview(customerid):
     mycursor = mydb.cursor()
 
     mycursor.execute(f"SELECT"
