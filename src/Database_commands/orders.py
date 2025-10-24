@@ -72,7 +72,15 @@ def ordersGetbyinvoicenummer(invoicenummer):
 
     myresult = mycursor.fetchall()
 
-def ordercustomerview(customerid):
+def orderUpdateStatus(OrderID,newStatus):
+    mycursor = mydb.cursor()
+
+    query = "UPDATE orders SET status = %s WHERE OrderID = %s"
+
+    mycursor.execute(query, (newStatus, OrderID))
+    mydb.commit()
+
+def ordercustomerview(OrderID):
     mycursor = mydb.cursor()
 
     mycursor.execute(f"SELECT"
