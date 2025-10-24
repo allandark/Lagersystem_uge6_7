@@ -28,7 +28,7 @@ class CustomerGet(Resource):
     @api.marshal_with(get_customer_model, code = 200)
     def get(self, id, name):
         customer = customer_dict[id]
-        return jsonify(id), 200
+        return jsonify({"Customer": id}), 200
     
 @api.route("/new")
 class CustomerPost(Resource):
