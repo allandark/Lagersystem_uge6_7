@@ -1,11 +1,11 @@
-from mysql import connector
-from product import ProductModel
+import mysql.connector
+from database_commands.product import ProductModel
 
 class Database_mangment:
     def __init__(self, host, user, password, dbname):
         
         try:
-            self.mydb = connector.connect(
+            self.mydb = mysql.connector.connect(
                 host=host,
                 user=user,
                 password=password,
