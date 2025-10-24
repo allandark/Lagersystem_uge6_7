@@ -11,6 +11,7 @@ class Database_mangment:
                 password=password,
                 database=dbname
             )
+            
         
             self.product = ProductModel(self.mydb.cursor())
         
@@ -19,6 +20,7 @@ class Database_mangment:
                 self.mydb.close()
         
     def isconnect(self):
+        
         if self.mydb.is_connected():
             return True
         else:
