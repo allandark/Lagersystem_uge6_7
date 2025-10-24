@@ -13,6 +13,7 @@ orders = [
     {'id': 2, 'name': "Vera", 'warelist': ['glasses', 'flatbed', 'truck'], 'total': 500}
 ]
 
+@api.route("/")
 class Order(Resource):
 
     @api.doc('Get an order based on ID')
