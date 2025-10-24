@@ -1,6 +1,10 @@
 from flask import Flask
 from werkzeug.middleware.proxy_fix import ProxyFix
 from apis import api, jwt
+from Database_commands.database_mangment import Database_mangment
+
+
+dbManger = Database_mangment(host = "localhost", user = "root", password="",dbName="lagersystem")
 
 
 def create_app():
