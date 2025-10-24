@@ -2,14 +2,14 @@ from mysql import connector
 from product import ProductModel
 
 class Database_mangment:
-    def __init__(self, host, user, password, dbName):
+    def __init__(self, host, user, password, dbname):
         
         try:
             self.mydb = connector.connect(
                 host=host,
                 user=user,
                 password=password,
-                database=dbName
+                database=dbname
             )
         
             self.product = ProductModel(self.mydb.cursor())
