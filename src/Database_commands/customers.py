@@ -1,40 +1,58 @@
 import mysql.connector
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="917319",
-    database="lagersystem"
-)
 
-def customersGetAll():
-    mycursor = mydb.cursor()
+class customersModel:
 
-    mycursor.execute("SELECT * FROM customers")
+    def __init__(self, db):
+        self.db = db
+        
+    def customersGetAll(self):
+        
+        try:
+            self.db.execute("SELECT * FROM customers")
 
-    myresult = mycursor.fetchall()
+            myresult = self.db.fetchall()
+            
+            return myresult
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False
 
 
+    def customersbyId(self, id):
 
-def customersbyId(id):
-    mycursor = mydb.cursor()
+        try:
+            self.db.execute(f"SELECT * FROM customers where customerid = %s ", (id,))
 
-    mycursor.execute(f"SELECT * FROM customers where customerid = %s ", (id,))
+            myresult = self.db.fetchall()
+            
+            return myresult
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False
+        
+    def customersinsert(self,name,Email):
 
-    myresult = mycursor.fetchall()
+        try:
+            query = "INSERT INTO customers (navn, Email) VALUES (%s, %s)"
 
-def customersinsert(name,Email):
-    mycursor = mydb.cursor()
+            self.db.execute(query, (name, Email))
+            self.db.commit()
+            
+            return True
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False
+        
+    def customerUpdateName(self, customerid,newName):
 
-    query = "INSERT INTO customers (navn, Email) VALUES (%s, %s)"
+        try:
+            query = "UPDATE customers SET navn = %s WHERE customerid = %s"
 
-    mycursor.execute(query, (name, Email))
-    mydb.commit()
-
-def customerUpdateName(customerid,newName):
-    mycursor = mydb.cursor()
-
-    query = "UPDATE customers SET navn = %s WHERE customerid = %s"
-
-    mycursor.execute(query, (newName, customerid))
-    mydb.commit()
+            self.db.execute(query, (newName, customerid))
+            self.db.commit()
+            
+            return True
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False

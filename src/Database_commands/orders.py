@@ -1,89 +1,124 @@
 import mysql.connector
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="917319",
-    database="lagersystem"
-)
+class Ordersmodel:
+    def __init__(self,db):
+        self.db = db
+    
+    def ordersGetall(self):
+        try:
+            self.db.execute("SELECT * FROM orders")
 
-def ordersGetall():
-    mycursor = mydb.cursor()
-
-    mycursor.execute("SELECT * FROM orders")
-
-    myresult = mycursor.fetchall()
-
-
-def ordersInsert(produktID,invoicenummer,customerid,status,mængde,lagerID):
-    mycursor = mydb.cursor()
-
-    query = "INSERT INTO orders (produktID, invoicenummer,customerid,status,mængde,lagerID) VALUES (%s, %s, %s,%s, %s, %s)"
-
-    mycursor.execute(query, (produktID, invoicenummer, customerid,status,mængde,lagerID))
-    mydb.commit()
-
-def ordersGetbyID(OrderID):
-    mycursor = mydb.cursor()
-
-    mycursor.execute(f"SELECT * FROM orders where OrderID = %s ", (OrderID,))
-
-    myresult = mycursor.fetchall()
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting all orders:", e)
+            return False
 
 
-def ordersGetbyProduktID(produktID):
-    mycursor = mydb.cursor()
+    def ordersInsert(self, produktID,invoicenummer,customerid,status,mængde,lagerID):
+        
+        try:
+            query = "INSERT INTO orders (produktID, invoicenummer,customerid,status,mængde,lagerID) VALUES (%s, %s, %s,%s, %s, %s)"
 
-    mycursor.execute(f"SELECT * FROM orders where produktID = %s ", (produktID,))
+            self.db.execute(query, (produktID, invoicenummer, customerid,status,mængde,lagerID))
+            self.db.commit()
+            return True
+        except Exception as e:
+            print("Error inserting orders:", e)
+            return False
+    def ordersGetbyID(self, OrderID):
+        
+        try:
+            self.db.execute(f"SELECT * FROM orders where OrderID = %s ", (OrderID,))
 
-    myresult = mycursor.fetchall()
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting orders by orderID:", e)
+            return False
+
+    def ordersGetbyProduktID(self, produktID):
+        
+        try:
+            self.db.execute(f"SELECT * FROM orders where produktID = %s ", (produktID,))
+
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting orders by productID:", e)
+            return False
 
 
-def ordersGetbyCustomerID(customerid):
-    mycursor = mydb.cursor()
+    def ordersGetbyCustomerID(self, customerid):
+        
+        try:
+            self.db.execute(f"SELECT * FROM orders where customerid = %s ", (customerid,))
 
-    mycursor.execute(f"SELECT * FROM orders where customerid = %s ", (customerid,))
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting orders by customerID:", e)
+            return False
 
-    myresult = mycursor.fetchall()
+    def ordersGetbylagerID(self, lagerID):
+        
+        try:
+            self.db.execute(f"SELECT * FROM orders where lagerID = %s ", (lagerID,))
 
-
-def ordersGetbylagerID(lagerID):
-    mycursor = mydb.cursor()
-
-    mycursor.execute(f"SELECT * FROM orders where lagerID = %s ", (lagerID,))
-
-    myresult = mycursor.fetchall()
-
-
-
-def ordersGetbyStatus(status):
-    mycursor = mydb.cursor()
-
-    mycursor.execute(f"SELECT * FROM orders where status = %s ", (status,))
-
-    myresult = mycursor.fetchall()
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting orders by lagerID:", e)
+            return False
 
 
+    def ordersGetbyStatus(self, status):
+        
+        try:
+            self.db.execute(f"SELECT * FROM orders where status = %s ", (status,))
 
-def ordersGetbyinvoicenummer(invoicenummer):
-    mycursor = mydb.cursor()
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting orders by status:", e)
+            return False
 
-    mycursor.execute(f"SELECT * FROM orders where invoicenummer = %s ", (invoicenummer,))
 
-    myresult = mycursor.fetchall()
+    def ordersGetbyinvoicenummer(self, invoicenummer):
+        
+        try:
+            self.db.execute(f"SELECT * FROM orders where invoicenummer = %s ", (invoicenummer,))
 
-def orderUpdateStatus(OrderID,newStatus):
-    mycursor = mydb.cursor()
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting orders by invoicenumber:", e)
+            return False
+        
+    def orderUpdateStatus(self, OrderID,newStatus):
+        
+        try:
+            query = "UPDATE orders SET status = %s WHERE OrderID = %s"
 
-    query = "UPDATE orders SET status = %s WHERE OrderID = %s"
-
-    mycursor.execute(query, (newStatus, OrderID))
-    mydb.commit()
-
-def ordercustomerview(customerid):
-    mycursor = mydb.cursor()
-
-    mycursor.execute(f"SELECT"
+            self.db.execute(query, (newStatus, OrderID))
+            self.db.commit()
+        
+            return True
+        except Exception as e:
+            print("Error updateing orders status:", e)
+            return False
+        
+    def ordercustomerview(self, customerid):
+        
+        try:
+            self.db.execute(f"SELECT"
                      f" orders.invoicenummer,"
                      f" produkts.navn,"
                      f" produkts.pris, "
@@ -94,5 +129,9 @@ def ordercustomerview(customerid):
                      f" join customers on orders.customerid = customers.customerID"
                      f" where orders.customerid = %s ", (customerid,))
 
-    myresult = mycursor.fetchall()
-
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting orders in customerview:", e)
+            return False

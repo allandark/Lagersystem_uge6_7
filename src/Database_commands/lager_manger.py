@@ -1,45 +1,57 @@
 import mysql.connector
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="917319",
-    database="lagersystem"
-)
+class lager_mangerModel:
+    
+    def __init__(self, db):
+        self.db = db
+    
 
-def lagerMangergetALL():
+    def lagerMangergetALL(self):
+        
+        try:
+            self.db.execute("SELECT * FROM lager_manger")
 
-    mycursor = mydb.cursor()
-
-    mycursor.execute("SELECT * FROM lager_manger")
-
-    myresult = mycursor.fetchall()
-
-
-
-def lagerMangerGetALlbyProductID(produktID):
-
-    mycursor = mydb.cursor()
-
-    mycursor.execute(f"SELECT * FROM lager_manger where produktID = %s ", (produktID,))
-
-
-    myresult = mycursor.fetchall()
+            myresult = self.db.fetchall()
+        
+            return myresult
+        
+        except Exception as e:
+            print("Error getting LagerManger:", e)
+            return False
+        
+    def lagerMangerGetALlbyProductID(self,produktID):
+        
+        try:
+            self.db.execute(f"SELECT * FROM lager_manger where produktID = %s ", (produktID,))
 
 
-def lagerMangerGetAllbyLagerID(lagerID):
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting LagerManger by produktID:", e)
+            return False
+        
+    def lagerMangerGetAllbyLagerID(self,lagerID):
+        
+        try:
+            self.db.execute(f"SELECT * FROM lager_manger where lagerID = %s ", (lagerID,))
 
-    mycursor = mydb.cursor()
+            myresult = self.db.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting LagerManger by id:", e)
+            return False
+        
+    def lagerMangerInsert(self,lagerID,produktID,antal):
+        
+        try:
+            query = "INSERT INTO lager_manger (lagerID, produktID,antal) VALUES (%s, %s, %s)"
 
-    mycursor.execute(f"SELECT * FROM lager_manger where lagerID = %s ", (lagerID,))
-
-    myresult = mycursor.fetchall()
-
-
-def lagerMangerInsert(lagerID,produktID,antal):
-    mycursor = mydb.cursor()
-
-    query = "INSERT INTO lager_manger (lagerID, produktID,antal) VALUES (%s, %s, %s)"
-
-    mycursor.execute(query, (lagerID, produktID,antal))
-    mydb.commit()
+            self.db.execute(query, (lagerID, produktID,antal))
+            self.db.commit()
+            return True
+        except Exception as e:
+            print("Error inserting LagerManger:", e)
+            return False

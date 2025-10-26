@@ -1,42 +1,55 @@
 import mysql.connector
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="917319",
-    database="lagersystem"
-)
-def lagersgetALL():
+class lagermodel:
+    
+    def __init__(self, db):
+        self.db = db 
+    
+    def lagersgetALL(self):
+        
+        try:
+            self.db.execute("SELECT * FROM lagers")
 
-    mycursor = mydb.cursor()
+            myresult = self.db.fetchall()
+            
+            return myresult
+        except Exception as e:
+            print("Error getting all lager:", e)
+            return False
 
-    mycursor.execute("SELECT * FROM lagers")
+    def lagersGetAllbyLagerID(self, lagerID):
+        
+        try:
+            self.db.execute(f"SELECT * FROM lagers where lagerID = %s ", (lagerID,))
 
-    myresult = mycursor.fetchall()
+            myresult = self.db.fetchall()
+            
+            return myresult
+        except Exception as e:
+            print("Error getting lagers by ID:", e)
+            return False
 
+    def lagersGetAllbyLagerNavn(self, navn):
+        
+        try:
+            self.db.execute(f"SELECT * FROM lagers where navn = %s ", (navn,))
 
-def lagersGetAllbyLagerID(lagerID):
+            myresult = self.db.fetchall()
+            
+            return myresult
+        except Exception as e:
+            print("Error getting lagers by navn:", e)
+            return False
 
-    mycursor = mydb.cursor()
+    def lagerinstert(self, navn):
+        
+        try:
+            query = "INSERT INTO lagers (navn) VALUES (%s)"
 
-    mycursor.execute(f"SELECT * FROM lagers where lagerID = %s ", (lagerID,))
-
-    myresult = mycursor.fetchall()
-
-
-def lagersGetAllbyLagerNavn(navn):
-
-    mycursor = mydb.cursor()
-
-    mycursor.execute(f"SELECT * FROM lagers where navn = %s ", (navn,))
-
-    myresult = mycursor.fetchall()
-
-
-def lagerinstert(navn):
-    mycursor = mydb.cursor()
-
-    query = "INSERT INTO lagers (navn) VALUES (%s)"
-
-    mycursor.execute(query, (navn,))
-    mydb.commit()
+            self.db.execute(query, (navn,))
+            self.db.commit()
+            
+            return True
+        except Exception as e:
+            print("Error inserting Lager:", e)
+            return False

@@ -1,50 +1,67 @@
 import mysql.connector
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="917319",
-    database="lagersystem"
-)
+class adminmodel:
+    
+    def __init__(self, db):
+        self.db = db
+        
+    def adminGetAll(self):
+        
+        try:
+            self.db.execute("SELECT * FROM admin")
+
+            myresult = self.db.fetchall()
+            
+            return myresult
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False
 
 
-def adminGetAll():
-    mycursor = mydb.cursor()
+    def adminGetbyId(self, id):
+        
+        try:
+            self.db.execute(f"SELECT * FROM admin where adminid = %s ", (id,))
 
-    mycursor.execute("SELECT * FROM admin")
+            myresult = self.db.fetchall()
+            
+            return myresult
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False
+        
+    def admininsert(self, name,password):
+        
+        try:
+            query = "INSERT INTO admin (navn, adminpassword) VALUES (%s, %s)"
 
-    myresult = mycursor.fetchall()
+            self.db.execute(query, (name, password))
+            self.db.commit()
+            return True
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False
+        
+    def adminupdateName(self, adminid,newName):
+        
+        try:
+            query = "UPDATE admin SET navn = %s WHERE adminid = %s"
 
+            self.db.execute(query, (newName, adminid))
+            self.db.commit()
+            return True
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False
+        
+    def adminupdatePassword(self,adminid,adminpassword):
+        
+        try:
+            query = "UPDATE admin SET adminpassword = %s WHERE adminid = %s"
 
-
-def adminGetbyId(id):
-    mycursor = mydb.cursor()
-
-    mycursor.execute(f"SELECT * FROM admin where adminid = %s ", (id,))
-
-    myresult = mycursor.fetchall()
-
-
-def admininsert(name,password):
-    mycursor = mydb.cursor()
-
-    query = "INSERT INTO admin (navn, adminpassword) VALUES (%s, %s)"
-
-    mycursor.execute(query, (name, password))
-    mydb.commit()
-
-def adminupdateName(adminid,newName):
-    mycursor = mydb.cursor()
-
-    query = "UPDATE admin SET navn = %s WHERE adminid = %s"
-
-    mycursor.execute(query, (newName, adminid))
-    mydb.commit()
-
-def adminupdatePassword(adminid,adminpassword):
-    mycursor = mydb.cursor()
-
-    query = "UPDATE admin SET adminpassword = %s WHERE adminid = %s"
-
-    mycursor.execute(query, (adminpassword, adminid))
-    mydb.commit()
+            self.db.execute(query, (adminpassword, adminid))
+            self.db.commit()
+            return True
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False
