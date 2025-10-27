@@ -20,7 +20,7 @@ class OrderGet(Resource):
     @api.doc('Get an order based on ID')
     @api.marshal_with(orders_model, skip_none=True, code=200)
     def get(self, id):
-        return id, 200
+        return {"id":id}, 200
 
 @api.route("/")
 class Order(Resource):
