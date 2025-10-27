@@ -4,6 +4,7 @@ from apis.auth import api as auth_ns
 from apis.auth import jwt
 from apis.products import api as product_ns
 from apis.warehouse import api as warehouse_ns
+from apis.orders import api as orders_ns
 
 
 # TODO: make configurable
@@ -16,5 +17,6 @@ api = Api(
 
 api.add_namespace(auth_ns)
 api.add_namespace(product_ns)
+api.add_namespace(orders_ns)
 api.add_namespace(warehouse_ns)
 # Add more endpoints here
