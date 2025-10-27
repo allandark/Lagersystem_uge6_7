@@ -18,8 +18,9 @@ def create_api_product(db_manager):
             'id': fields.Integer(required=True, description='Name of product')})
 
     update_product_model: Model = api.model('UpdateProductModel', {
-            'id': fields.Integer(required=True, description='Name of product'),
-            'status': fields.String(required=True, description='New status of product')})
+            'id': fields.Integer(required=True, description = "Product ID"),
+            'name': fields.String(required=True, description='Name of product'),
+            'price': fields.Float(required=True, description="Poduct price")})
 
     @api.route("/<int:id>")
     class ProductGetById(Resource):
@@ -37,11 +38,11 @@ def create_api_product(db_manager):
             print(products)
             return {"products":products}, 200
         
-    @api.route("/<float:low_price><float:high_price>")
+    @api.route("/<float:low_price>/<float:high_price>")
     class ProductGetByPriceInterval(Resource):
         @api.doc('Get product based on price')
-        def get(self, price):
-            products = db_manager.products.GetByPrice(price)
+        def get(self, low_price, high_price):
+            products = db_manager.products.GetPriceByInterval(low_price, high_price)
             print(products)
             return {"products":products}, 200
     
@@ -52,27 +53,31 @@ def create_api_product(db_manager):
             products = db_manager.products.GetAll()
             return {"products": products}, 200
 
-        @api.doc('Add new product')
-        @api.expect(new_product_model)
+        @api.doc('Update new product')
+        @api.expect(update_product_model)
         def put(self):
-            product = api.payload['name']
-            product_list.append(product)
-            return jsonify({'New product': product_list})
+            product_ID = api.payload['id']
+            result = db_manager.products.GetById(product_ID)
+            return jsonify({'New product': result})
 
         @api.doc('Remove product')
         @api.expect(remove_product_model)
         def delete(self):
             ID = api.payload['id']
-            result = product_list.pop(ID)
+            result = db_manager.products.GetById(ID)
             return jsonify({'Removed product': result})
 
 
-        @api.doc('Update product')
-        @api.expect(update_product_model)
+        @api.doc('New product')
+        @api.expect(new_product_model)
         def post(self):
-            ID = api.payload['id']
-            status = api.payload['status']
-            product_list[ID] = status
-            return jsonify({'Updated product': product_list[ID]})
+            product_id = api.payload['id']
+            product_name = api.payload['name']
+            product_price = api.payload['price']
+            #if(len(db_manager.products.GetById(product_id)) > 0):
+             #   return jsonify({"message": f"Product {product_id} already exists!"})
+            #else:
+            result = db_manager.products.insertproduct(product_name, product_price)
+            return jsonify({'Added product': result})
     
     return api
