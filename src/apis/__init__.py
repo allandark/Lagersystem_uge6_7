@@ -3,6 +3,7 @@ from apis.auth import create_api_auth, jwt
 from apis.products import create_api_product
 from apis.warehouse import create_api_warehouse
 from apis.customer import create_api_customer
+from apis.orders import create_api_orders
 
 
 
@@ -25,6 +26,7 @@ def create_api(
     api.add_namespace(create_api_product(db_manager))
     api.add_namespace(create_api_warehouse(db_manager))
     api.add_namespace(create_api_customer(db_manager))
+    api.add_namespace(create_api_orders(db_manager))
     # Add more endpoints here
 
     return api
