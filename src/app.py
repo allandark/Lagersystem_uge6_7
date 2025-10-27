@@ -1,7 +1,7 @@
 from flask import Flask
 from werkzeug.middleware.proxy_fix import ProxyFix
-from apis import api, jwt
-from database_commands.database_mangment import Database_mangment
+from apis import create_api, jwt
+from database_commands.database_manager import DatabaseManager
 from database_commands.product import ProductModel
 from core.config import Config, ReadConfigFile
 
@@ -12,7 +12,7 @@ def create_app():
     # Create App
     config = ReadConfigFile("config.json")
 
-    dbManger = Database_mangment(
+    dbManger = DatabaseManager(
         host = config.db_host, 
         user = config.db_user, 
         password= config.db_password,
@@ -27,8 +27,16 @@ def create_app():
     app.config["SWAGGER_UI"] = config.swagger_ui
     app.config["API_HOST"] = config.api_host
     app.config["API_PORT"] = config.api_port
+
+    api = create_api(
+        title="Lagersystem API",
+        version="1.0",
+        description="Largersystem API",
+        swagger_ui=config.swagger_ui,
+        db_manager=dbManger
+    )
     # Init endpoints
-    api.init_app(app,docs=config.swagger_ui) # does not set the swagger ui correctly
+    api.init_app(app,docs=config.swagger_ui)
 
     # json webtoken manager
     jwt.init_app(app)

@@ -1,7 +1,7 @@
 import mysql.connector
 from database_commands.product import ProductModel
 
-class Database_mangment:
+class DatabaseManager:
     def __init__(self, host, user, password, dbname):
         
         try:
