@@ -4,21 +4,6 @@ from apis.auth import authorizations
 
 from core.utils import parse_int, parse_dict_key
 
-api: Namespace = Namespace("warehouse", description="Warehouse namespace", authorizations=authorizations)
-
-
-warehouse_model = api.model("WarehouseModel",{
-    "id": fields.Integer,
-    "name": fields.String
-})
-
-warehouse_item_model = api.model("WarehouseItemModel",{
-    "id": fields.Integer,
-    "product_id": fields.Integer,
-    "warehouse_id": fields.Integer,
-    "quantity": fields.Integer
-})
-
 #TEMP: test
 
 items=[
@@ -42,183 +27,204 @@ warehouse_items = [
 ]
 # END TEMP
 
-@api.route('/')
-class WarehouseList(Resource):
 
-    @api.doc( description='Get list of warehouses')
-    @api.marshal_list_with(warehouse_model, code=200)
-    def get(self,):        
-        return warehouses, 200
 
-    @jwt_required()
-    @api.doc(
-        description="Create new warehouse",
-        security="jsonWebToken"
-        )
-    @api.expect(warehouse_model)
-    @api.marshal_with(warehouse_model, code=200)
-    def post(self):
-        id = parse_dict_key(api.payload, 'id')
-        name = parse_dict_key(api.payload, 'name')
-        if not id or not name:
-            return {"error": "invalid body"}, 400
+def create_api_warehouse(db_manager):
+    api: Namespace = Namespace("warehouse", description="Warehouse namespace", authorizations=authorizations)
 
-        id = parse_int(id)
-        if not id:
-            return {"error": "invalid id"}, 400
-        if not api.payload['name']:
-            return {"error": "empty name is not allowed"}, 400
-        wh = {
-            "id": len(warehouses),
-            "name": api.payload['name']
-        }
-        warehouses.append(wh)
-        return wh, 201
 
-@api.route('/<int:id>')
-class WarehouseDetail(Resource):
-    
-    @api.doc(
-        description='Get warehouse by ID')
-    @api.marshal_with(warehouse_model, code=200)
-    def get(self, id):
-        wh = next((w for w in warehouses if w['id'] == id), None)
-        if not wh:
-            return {"error": "warehouse not found"}, 404
-        return wh, 200
+    warehouse_model = api.model("WarehouseModel",{
+        "id": fields.Integer,
+        "name": fields.String
+    })
 
-    @jwt_required()
-    @api.doc(
-        description='Update warehouse of ID',
-        security="jsonWebToken")
-    @api.expect(warehouse_model)
-    @api.marshal_with(warehouse_model, code=200)
-    def put(self, id):
-        # find warehouse
-        wh = next((w for w in warehouses if w['id'] == id), None)
-        if not wh:
-            return {"error": "warehouse does not exist"}, 400
-        # update warehouse
-        wh['id'] = api.payload['id']
-        wh['name'] = api.payload['name']
-        return wh, 200
+    warehouse_item_model = api.model("WarehouseItemModel",{
+        "id": fields.Integer,
+        "product_id": fields.Integer,
+        "warehouse_id": fields.Integer,
+        "quantity": fields.Integer
+    })
 
+    @api.route('/')
+    class WarehouseList(Resource):
+
+        @api.doc( description='Get list of warehouses')
+        @api.marshal_list_with(warehouse_model, code=200)
+        def get(self,):        
+            return warehouses, 200
+
+        @jwt_required()
+        @api.doc(
+            description="Create new warehouse",
+            security="jsonWebToken"
+            )
+        @api.expect(warehouse_model)
+        @api.marshal_with(warehouse_model, code=200)
+        def post(self):
+            id = parse_dict_key(api.payload, 'id')
+            name = parse_dict_key(api.payload, 'name')
+            if not id or not name:
+                return {"error": "invalid body"}, 400
+
+            id = parse_int(id)
+            if not id:
+                return {"error": "invalid id"}, 400
+            if not api.payload['name']:
+                return {"error": "empty name is not allowed"}, 400
+            wh = {
+                "id": len(warehouses),
+                "name": api.payload['name']
+            }
+            warehouses.append(wh)
+            return wh, 201
+
+    @api.route('/<int:id>')
+    class WarehouseDetail(Resource):
         
-    @jwt_required()
-    @api.doc( 
-        description='Delete warehouse of ID',
-        security="jsonWebToken")
-    def delete(self, id):
-        wh = next((w for w in warehouses if w['id'] == id), None)
-        if not wh:
-            return {"error": "warehouse not found"}, 404
+        @api.doc(
+            description='Get warehouse by ID')
+        @api.marshal_with(warehouse_model, code=200)
+        def get(self, id):
+            wh = next((w for w in warehouses if w['id'] == id), None)
+            if not wh:
+                return {"error": "warehouse not found"}, 404
+            return wh, 200
 
-        for i, w in enumerate(warehouses):
-            if w['id'] == id:
-                del warehouses[i]
-                break
+        @jwt_required()
+        @api.doc(
+            description='Update warehouse of ID',
+            security="jsonWebToken")
+        @api.expect(warehouse_model)
+        @api.marshal_with(warehouse_model, code=200)
+        def put(self, id):
+            # find warehouse
+            wh = next((w for w in warehouses if w['id'] == id), None)
+            if not wh:
+                return {"error": "warehouse does not exist"}, 400
+            # update warehouse
+            wh['id'] = api.payload['id']
+            wh['name'] = api.payload['name']
+            return wh, 200
 
-        return {"message": "warehouse deleted"}, 200
+            
+        @jwt_required()
+        @api.doc( 
+            description='Delete warehouse of ID',
+            security="jsonWebToken")
+        def delete(self, id):
+            wh = next((w for w in warehouses if w['id'] == id), None)
+            if not wh:
+                return {"error": "warehouse not found"}, 404
+
+            for i, w in enumerate(warehouses):
+                if w['id'] == id:
+                    del warehouses[i]
+                    break
+
+            return {"message": "warehouse deleted"}, 200
 
 
-@api.route('/<int:id>/inventory')
-class InventoryDetail(Resource):
-    
-    @api.doc( 
-        description='Get inventory of warehouse with ID')
-    @api.marshal_list_with(warehouse_item_model)
-    def get(self,id):
-        wh = next((w for w in warehouses if w['id'] == id), None)
-        if not wh:
-            return {"error": "warehouse not found"}, 404
-
-        inventory = [i for i in warehouse_items if i['warehouse_id'] == id]
-        return inventory, 200
+    @api.route('/<int:id>/inventory')
+    class InventoryDetail(Resource):
         
-    
-    @jwt_required()
-    @api.doc( 
-        description='Create inventory item of warehouse with ID',
-        security="jsonWebToken")
-    @api.expect(warehouse_item_model)
-    @api.marshal_with(warehouse_item_model)
-    def post(self,id):
-        # check for key errors
-        product_id = parse_dict_key(api.payload, 'product_id')
-        warehouse_id = parse_dict_key(api.payload, 'warehouse_id')
-        quantity = parse_dict_key(api.payload, 'quantity')
-        # check for value errors
-        id_= parse_int(id)
-        product_id = parse_int(product_id)
-        warehouse_id = parse_int(warehouse_id)
-        quantity = parse_int(quantity)
-        if id_ is None or\
-            product_id is None or\
-            warehouse_id  is None or\
-            quantity is None:
-            return {"error": "bad request"}, 400
-        wh = next((w for w in warehouses if w['id'] == id_), None)
-        if not wh:
-            return {"error": "warehouse not found"}, 404
+        @api.doc( 
+            description='Get inventory of warehouse with ID')
+        @api.marshal_list_with(warehouse_item_model)
+        def get(self,id):
+            wh = next((w for w in warehouses if w['id'] == id), None)
+            if not wh:
+                return {"error": "warehouse not found"}, 404
 
-        item = {
-            "id": len(warehouse_items),
-            "product_id": api.payload['product_id'],
-            "warehouse_id": api.payload['warehouse_id'],
-            "quantity": api.payload['quantity']
-        }
-        warehouse_items.append(item)
-        return item, 201
-
-@api.route('/<int:id>/inventory/<int:item_id>')
-class InventoryList(Resource):
-    
-    @api.doc( 
-        description='Get inventory item with item_id from warehouse with ID')
-    @api.marshal_with(warehouse_item_model)
-    def get(self,id,item_id):
-        wh = next((w for w in warehouses if w['id'] == id), None)
-        if not wh:
-            return {"error": "warehouse not found"}, 404
-        item = next((i for i in warehouse_items if i['id'] == item_id), None)
-        if not item:
-            return {"error": "item not found"}, 404
-        return item, 200
-
-    @jwt_required()
-    @api.doc( 
-        description='Update inventory item with item_id from warehouse with ID',
-        security="jsonWebToken")
-    @api.expect(warehouse_item_model)
-    @api.marshal_with(warehouse_item_model)
-    def put(self,id,item_id):
-        wh = next((w for w in warehouses if w['id'] == id), None)
-        if not wh:
-            return {"error": "warehouse not found"}, 404
-        item = next((i for i in warehouse_items if i['id'] == item_id), None)
-        if not item:
-            return {"error": "item not found"}, 404
+            inventory = [i for i in warehouse_items if i['warehouse_id'] == id]
+            return inventory, 200
+            
         
-        item['product_id'] = api.payload['product_id']
-        item['warehouse_id'] = api.payload['warehouse_id']
-        item['quantity'] = api.payload['quantity']
-        return item, 200
+        @jwt_required()
+        @api.doc( 
+            description='Create inventory item of warehouse with ID',
+            security="jsonWebToken")
+        @api.expect(warehouse_item_model)
+        @api.marshal_with(warehouse_item_model)
+        def post(self,id):
+            # check for key errors
+            product_id = parse_dict_key(api.payload, 'product_id')
+            warehouse_id = parse_dict_key(api.payload, 'warehouse_id')
+            quantity = parse_dict_key(api.payload, 'quantity')
+            # check for value errors
+            id_= parse_int(id)
+            product_id = parse_int(product_id)
+            warehouse_id = parse_int(warehouse_id)
+            quantity = parse_int(quantity)
+            if id_ is None or\
+                product_id is None or\
+                warehouse_id  is None or\
+                quantity is None:
+                return {"error": "bad request"}, 400
+            wh = next((w for w in warehouses if w['id'] == id_), None)
+            if not wh:
+                return {"error": "warehouse not found"}, 404
 
-    @jwt_required()
-    @api.doc( 
-        description='Delete inventory item with item_id from warehouse with ID',
-        security="jsonWebToken")
-    def delete(self,id,item_id):
-        wh = next((w for w in warehouses if w['id'] == id), None)
-        if not wh:
-            return {"error": "warehouse not found"}, 404
-        item = next((i for i in warehouse_items if i['id'] == item_id), None)
-        if not item:
-            return {"error": "item not found"}, 404
+            item = {
+                "id": len(warehouse_items),
+                "product_id": api.payload['product_id'],
+                "warehouse_id": api.payload['warehouse_id'],
+                "quantity": api.payload['quantity']
+            }
+            warehouse_items.append(item)
+            return item, 201
 
-        for i, w in enumerate(warehouse_items):
-            if w['id'] == item_id:
-                del warehouse_items[i]
-                break
+    @api.route('/<int:id>/inventory/<int:item_id>')
+    class InventoryList(Resource):
+        
+        @api.doc( 
+            description='Get inventory item with item_id from warehouse with ID')
+        @api.marshal_with(warehouse_item_model)
+        def get(self,id,item_id):
+            wh = next((w for w in warehouses if w['id'] == id), None)
+            if not wh:
+                return {"error": "warehouse not found"}, 404
+            item = next((i for i in warehouse_items if i['id'] == item_id), None)
+            if not item:
+                return {"error": "item not found"}, 404
+            return item, 200
 
-        return {"message": "inventory deleted"}, 200
+        @jwt_required()
+        @api.doc( 
+            description='Update inventory item with item_id from warehouse with ID',
+            security="jsonWebToken")
+        @api.expect(warehouse_item_model)
+        @api.marshal_with(warehouse_item_model)
+        def put(self,id,item_id):
+            wh = next((w for w in warehouses if w['id'] == id), None)
+            if not wh:
+                return {"error": "warehouse not found"}, 404
+            item = next((i for i in warehouse_items if i['id'] == item_id), None)
+            if not item:
+                return {"error": "item not found"}, 404
+            
+            item['product_id'] = api.payload['product_id']
+            item['warehouse_id'] = api.payload['warehouse_id']
+            item['quantity'] = api.payload['quantity']
+            return item, 200
+
+        @jwt_required()
+        @api.doc( 
+            description='Delete inventory item with item_id from warehouse with ID',
+            security="jsonWebToken")
+        def delete(self,id,item_id):
+            wh = next((w for w in warehouses if w['id'] == id), None)
+            if not wh:
+                return {"error": "warehouse not found"}, 404
+            item = next((i for i in warehouse_items if i['id'] == item_id), None)
+            if not item:
+                return {"error": "item not found"}, 404
+
+            for i, w in enumerate(warehouse_items):
+                if w['id'] == item_id:
+                    del warehouse_items[i]
+                    break
+
+            return {"message": "inventory deleted"}, 200
+
+
+    return api

@@ -6,7 +6,7 @@ from database_commands.customers import customersModel
 from database_commands.lager_manger import lager_mangerModel
 from database_commands.lagers import lagermodel
 
-class Database_mangment:
+class DatabaseManager:
     def __init__(self, host, user, password, dbname):
         
         try:
