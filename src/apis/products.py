@@ -1,7 +1,6 @@
 from flask_restx import Namespace, Resource, fields, Model
 from flask import Flask, jsonify, request
 from flask_restx import Api, Resource
-from database_commands.product import ProductModel
 from apis.auth import authorizations
 
 
@@ -11,7 +10,9 @@ def create_api_product(db_manager):
     product_list = list(("aluminium", "banana", "apple", "car"))
 
     new_product_model: Model = api.model('NewProductModel', {
-            'name': fields.String(required=True, description='Name of product')})
+            'id': fields.Integer(required=True, description = "Product ID"),
+            'name': fields.String(required=True, description='Name of product'),
+            'price': fields.Float(required=True, description="Poduct price")})
 
     remove_product_model: Model = api.model('RemoveProductModel', {
             'id': fields.Integer(required=True, description='Name of product')})
@@ -20,14 +21,37 @@ def create_api_product(db_manager):
             'id': fields.Integer(required=True, description='Name of product'),
             'status': fields.String(required=True, description='New status of product')})
 
-    @api.route("/get/<int:id>")
-    class ProductGet(Resource):
+    @api.route("/<int:id>")
+    class ProductGetById(Resource):
         @api.doc('Get product based on ID')
         def get(self, id):
-            return {"id":id}, 200
+            products = db_manager.products.GetById(id)
+            print(products)
+            return {"products":products}, 200
+        
+    @api.route("/<float:price>")
+    class ProductGetByPrice(Resource):
+        @api.doc('Get product based on price')
+        def get(self, price):
+            products = db_manager.products.GetByPrice(price)
+            print(products)
+            return {"products":products}, 200
+        
+    @api.route("/<float:low_price><float:high_price>")
+    class ProductGetByPriceInterval(Resource):
+        @api.doc('Get product based on price')
+        def get(self, price):
+            products = db_manager.products.GetByPrice(price)
+            print(products)
+            return {"products":products}, 200
     
     @api.route("/")
     class Product(Resource):
+        @api.doc("Get all products")
+        def get(self):
+            products = db_manager.products.GetAll()
+            return {"products": products}, 200
+
         @api.doc('Add new product')
         @api.expect(new_product_model)
         def put(self):

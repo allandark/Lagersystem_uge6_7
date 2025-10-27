@@ -18,7 +18,7 @@ class DatabaseManager:
             )
             
         
-            self.product = ProductModel(self.mydb.cursor())
+            self.products = ProductModel(self.mydb.cursor())
             self.orders = Ordersmodel(self.mydb.cursor())
             self.admin = adminmodel(self.mydb.cursor())
             self.customers = customersModel(self.mydb.cursor())
