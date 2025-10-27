@@ -17,6 +17,4 @@ api = Api(
 
 api.add_namespace(auth_ns)
 api.add_namespace(product_ns)
-api.add_namespace(orders_ns)
-api.add_namespace(warehouse_ns)
 # Add more endpoints here
