@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields, Model
 from flask import Flask, jsonify, request
 from flask_restx import Api, Resource
+from database_commands.product import ProductModel
 from apis.auth import authorizations
 
 
@@ -8,8 +9,6 @@ def create_api_product(db_manager):
     api: Namespace = Namespace("product", description="Product namespace", authorizations=authorizations)
 
     product_list = list(("aluminium", "banana", "apple", "car"))
-
-    get_product_model: Model = api.model('GetProductModel', {'id': fields.Integer(required=True, description='ID of product')})
 
     new_product_model: Model = api.model('NewProductModel', {
             'name': fields.String(required=True, description='Name of product')})
@@ -21,14 +20,14 @@ def create_api_product(db_manager):
             'id': fields.Integer(required=True, description='Name of product'),
             'status': fields.String(required=True, description='New status of product')})
 
-    @api.route("/product")
-    class Product(Resource):
+    @api.route("/get/<int:id>")
+    class ProductGet(Resource):
         @api.doc('Get product based on ID')
-        @api.expect(get_product_model)
-        def get(self):
-            id = api.payload['id']
-            return jsonify({'product': product_list[id]})
-        
+        def get(self, id):
+            return {"id":id}, 200
+    
+    @api.route("/")
+    class Product(Resource):
         @api.doc('Add new product')
         @api.expect(new_product_model)
         def put(self):
