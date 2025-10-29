@@ -10,8 +10,11 @@ class OrdersModel:
                 cursor.execute("SELECT * FROM orders")
 
                 myresult = cursor.fetchall()
+                orders = []
+                for ord in myresult:
+                    orders.append(self._totuple(ord))
         
-            return self._totuple(myresult)
+            return orders
         except Exception as e:
             print("Error getting all orders:", e)
             return False
@@ -40,7 +43,7 @@ class OrdersModel:
 
                 myresult = cursor.fetchall()
         
-            return self._totuple(myresult)
+            return self._totuple(myresult[0])
         except Exception as e:
             print("Error getting orders by orderID:", e)
             return False
@@ -159,12 +162,13 @@ class OrdersModel:
 
     def _totuple(self, myresult):
         result = {
-                "orderID": myresult[0][0],
-                "produktID": myresult[0][1],
-                "invoicenummer": myresult[0][2],
-                "customerID": myresult[0][3],
-                "status": myresult[0][4],
-                "mængde": myresult[0][5],
-                "lagerID": myresult[0][6]
+                "orderID": myresult[0],
+                "produktID": myresult[1],
+                "invoicenummer": myresult[2],
+                "customerID": myresult[3],
+                "status": myresult[4],
+                "mængde": myresult[5],
+                "lagerID": myresult[6]
             }
         return result
+    

@@ -46,7 +46,7 @@ def create_api_orders(db_manager):
             mængde = api.payload['mængde']
             lagerID = api.payload['lagerID']
             if ((orderID == 0) or (produktID == 0) or (customerID == 0) or (lagerID == 0)):
-                return jsonify({'message': 'Invalid order'})
+                return jsonify({'message': 'Invalid order'}, 400)
             else:
                 result = db_manager.orders.Insert(produktID, invoicenummer, customerID, status, mængde, lagerID)
             #orders_list.append({'id': {orderID}, 'produktID': {produktID}, 'warelist': {warelist}, 'total': {total}})
@@ -64,7 +64,7 @@ def create_api_orders(db_manager):
             lagerID = api.payload['lagerID']
             result = db_manager.orders.GetByID(orderID)
             if result == []:
-                return jsonify({"message": "Order does not exist"})
+                return jsonify({"message": "Order does not exist"}, 400)
             else:    
                 db_manager.orders.UpdateOrder(orderID, produktID, invoicenummer, customerID, status, mængde, lagerID)
             result = db_manager.orders.GetByID(orderID)
