@@ -1,65 +1,63 @@
 import mysql.connector
 
-class adminmodel:
+class AdminModel:
     
     def __init__(self, db):
         self.db = db
         
-    def adminGetAll(self):
+    def GetAll(self):
         
         try:
-            self.db.execute("SELECT * FROM admin")
-
-            myresult = self.db.fetchall()
-            
-            return myresult
+            with self.db.cursor() as cursor:
+                cursor.execute("SELECT * FROM admin")
+                myresult = cursor.fetchall() 
+                return myresult
         except Exception as e:
             print("Error checking if product exist by id:", e)
             return False
 
 
-    def adminGetbyId(self, id):
+    def GetById(self, id):
         
         try:
-            self.db.execute(f"SELECT * FROM admin where adminid = %s ", (id,))
-
-            myresult = self.db.fetchall()
-            
-            return myresult
+            with self.db.cursor() as cursor:
+                cursor.execute(f"SELECT * FROM admin where adminid = %s ", (id,))
+                myresult = cursor.fetchall()
+                return myresult
         except Exception as e:
             print("Error checking if product exist by id:", e)
             return False
         
-    def admininsert(self, name,password):
+    def Insert(self, name,password):
         
         try:
-            query = "INSERT INTO admin (navn, adminpassword) VALUES (%s, %s)"
-
-            self.db.execute(query, (name, password))
+            with self.db.cursor() as cursor:
+                query = "INSERT INTO admin (navn, adminpassword) VALUES (%s, %s)"
+                cursor.execute(query, (name, password))
             self.db.commit()
             return True
         except Exception as e:
             print("Error checking if product exist by id:", e)
             return False
         
-    def adminupdateName(self, adminid,newName):
+    def UpdateName(self, adminid,newName):
         
         try:
-            query = "UPDATE admin SET navn = %s WHERE adminid = %s"
-
-            self.db.execute(query, (newName, adminid))
+            with self.db.cursor() as cursor:
+                query = "UPDATE admin SET navn = %s WHERE adminid = %s"
+                cursor.execute(query, (newName, adminid))
             self.db.commit()
             return True
         except Exception as e:
             print("Error checking if product exist by id:", e)
             return False
         
-    def adminupdatePassword(self,adminid,adminpassword):
+    def UpdatePassword(self,adminid,adminpassword):
         
         try:
-            query = "UPDATE admin SET adminpassword = %s WHERE adminid = %s"
-
-            self.db.execute(query, (adminpassword, adminid))
+            with self.db.cursor() as cursor:
+                query = "UPDATE admin SET adminpassword = %s WHERE adminid = %s"
+                cursor.execute(query, (adminpassword, adminid))
             self.db.commit()
             return True
         except Exception as e:

@@ -1,10 +1,10 @@
 import mysql.connector
 
-class Ordersmodel:
+class OrdersModel:
     def __init__(self,db):
         self.db = db
     
-    def ordersGetall(self):
+    def GetAll(self):
         try:
             self.db.execute("SELECT * FROM orders")
 
@@ -16,7 +16,7 @@ class Ordersmodel:
             return False
 
 
-    def ordersInsert(self, produktID,invoicenummer,customerid,status,mængde,lagerID):
+    def Insert(self, produktID,invoicenummer,customerid,status,mængde,lagerID):
         
         try:
             query = "INSERT INTO orders (produktID, invoicenummer,customerid,status,mængde,lagerID) VALUES (%s, %s, %s,%s, %s, %s)"
@@ -27,7 +27,7 @@ class Ordersmodel:
         except Exception as e:
             print("Error inserting orders:", e)
             return False
-    def ordersGetbyID(self, OrderID):
+    def GetByID(self, OrderID):
         
         try:
             self.db.execute(f"SELECT * FROM orders where OrderID = %s ", (OrderID,))
@@ -39,7 +39,7 @@ class Ordersmodel:
             print("Error getting orders by orderID:", e)
             return False
 
-    def ordersGetbyProduktID(self, produktID):
+    def GetByProductID(self, produktID):
         
         try:
             self.db.execute(f"SELECT * FROM orders where produktID = %s ", (produktID,))
@@ -52,7 +52,7 @@ class Ordersmodel:
             return False
 
 
-    def ordersGetbyCustomerID(self, customerid):
+    def GetByCustomerID(self, customerid):
         
         try:
             self.db.execute(f"SELECT * FROM orders where customerid = %s ", (customerid,))
@@ -64,7 +64,7 @@ class Ordersmodel:
             print("Error getting orders by customerID:", e)
             return False
 
-    def ordersGetbylagerID(self, lagerID):
+    def GetByWarehouseID(self, lagerID):
         
         try:
             self.db.execute(f"SELECT * FROM orders where lagerID = %s ", (lagerID,))
@@ -77,7 +77,7 @@ class Ordersmodel:
             return False
 
 
-    def ordersGetbyStatus(self, status):
+    def GetbyStatus(self, status):
         
         try:
             self.db.execute(f"SELECT * FROM orders where status = %s ", (status,))
@@ -90,7 +90,7 @@ class Ordersmodel:
             return False
 
 
-    def ordersGetbyinvoicenummer(self, invoicenummer):
+    def GetByInvoiceNumber(self, invoicenummer):
         
         try:
             self.db.execute(f"SELECT * FROM orders where invoicenummer = %s ", (invoicenummer,))
@@ -102,7 +102,7 @@ class Ordersmodel:
             print("Error getting orders by invoicenumber:", e)
             return False
         
-    def orderUpdateStatus(self, OrderID,newStatus):
+    def UpdateStatus(self, OrderID,newStatus):
         
         try:
             query = "UPDATE orders SET status = %s WHERE OrderID = %s"
@@ -115,7 +115,7 @@ class Ordersmodel:
             print("Error updateing orders status:", e)
             return False
         
-    def ordercustomerview(self, customerid):
+    def OrderCustomerView(self, customerid):
         
         try:
             self.db.execute(f"SELECT"

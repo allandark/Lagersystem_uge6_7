@@ -4,30 +4,6 @@ from apis.auth import authorizations
 
 from core.utils import parse_int, parse_dict_key
 
-#TEMP: test
-
-items=[
-    {"id": 0, "unit_price": 500, "name": "laptop"},
-    {"id": 1, "unit_price": 50, "name": "pc mouse"},
-    {"id": 2, "unit_price": 150, "name": "pc keyboard"},
-]
-
-warehouses = [
-    {"id": 0, "name":"Odense"},
-    {"id": 1, "name":"Middelfart"},
-]
-
-warehouse_items = [
-    {"id": 0, "product_id":0, "warehouse_id": 0, "quantity": 5},
-    {"id": 1, "product_id":1, "warehouse_id": 0, "quantity": 10},
-    {"id": 2, "product_id":2, "warehouse_id": 0, "quantity": 15},
-    {"id": 3, "product_id":0, "warehouse_id": 1, "quantity": 15},
-    {"id": 4, "product_id":1, "warehouse_id": 1, "quantity": 5},
-    {"id": 5, "product_id":2, "warehouse_id": 1, "quantity": 20}
-]
-# END TEMP
-
-
 
 def create_api_warehouse(db_manager):
     api: Namespace = Namespace("warehouse", description="Warehouse namespace", authorizations=authorizations)
@@ -50,7 +26,8 @@ def create_api_warehouse(db_manager):
 
         @api.doc( description='Get list of warehouses')
         @api.marshal_list_with(warehouse_model, code=200)
-        def get(self,):        
+        def get(self,):
+            warehouses = db_manager.warehouse.GetALL()        
             return warehouses, 200
 
         @jwt_required()
@@ -63,19 +40,18 @@ def create_api_warehouse(db_manager):
         def post(self):
             id = parse_dict_key(api.payload, 'id')
             name = parse_dict_key(api.payload, 'name')
-            if not id or not name:
+            
+            if id is None or not name:
                 return {"error": "invalid body"}, 400
 
             id = parse_int(id)
-            if not id:
+            if id is None:
                 return {"error": "invalid id"}, 400
             if not api.payload['name']:
                 return {"error": "empty name is not allowed"}, 400
-            wh = {
-                "id": len(warehouses),
-                "name": api.payload['name']
-            }
-            warehouses.append(wh)
+            wh = db_manager.warehouse.Insert(name)
+            if not wh:
+                return {"error": "database error inserting model"}, 400
             return wh, 201
 
     @api.route('/<int:id>')
@@ -85,7 +61,7 @@ def create_api_warehouse(db_manager):
             description='Get warehouse by ID')
         @api.marshal_with(warehouse_model, code=200)
         def get(self, id):
-            wh = next((w for w in warehouses if w['id'] == id), None)
+            wh = db_manager.warehouse.GetByID(id)
             if not wh:
                 return {"error": "warehouse not found"}, 404
             return wh, 200
@@ -96,14 +72,13 @@ def create_api_warehouse(db_manager):
             security="jsonWebToken")
         @api.expect(warehouse_model)
         @api.marshal_with(warehouse_model, code=200)
-        def put(self, id):
+        def put(self, id):            
             # find warehouse
-            wh = next((w for w in warehouses if w['id'] == id), None)
+            wh = db_manager.warehouse.GetByID(id)
             if not wh:
                 return {"error": "warehouse does not exist"}, 400
             # update warehouse
-            wh['id'] = api.payload['id']
-            wh['name'] = api.payload['name']
+            wh = db_manager.warehouse.Update(id, api.payload['name'])
             return wh, 200
 
             
@@ -112,14 +87,9 @@ def create_api_warehouse(db_manager):
             description='Delete warehouse of ID',
             security="jsonWebToken")
         def delete(self, id):
-            wh = next((w for w in warehouses if w['id'] == id), None)
+            wh = db_manager.warehouse.Delete(id)
             if not wh:
                 return {"error": "warehouse not found"}, 404
-
-            for i, w in enumerate(warehouses):
-                if w['id'] == id:
-                    del warehouses[i]
-                    break
 
             return {"message": "warehouse deleted"}, 200
 
@@ -131,12 +101,11 @@ def create_api_warehouse(db_manager):
             description='Get inventory of warehouse with ID')
         @api.marshal_list_with(warehouse_item_model)
         def get(self,id):
-            wh = next((w for w in warehouses if w['id'] == id), None)
-            if not wh:
+            wh_entries = db_manager.warehosue_inventory.GetByWarehouseID(id)            
+            if not wh_entries:
                 return {"error": "warehouse not found"}, 404
 
-            inventory = [i for i in warehouse_items if i['warehouse_id'] == id]
-            return inventory, 200
+            return wh_entries, 200
             
         
         @jwt_required()
@@ -160,17 +129,14 @@ def create_api_warehouse(db_manager):
                 warehouse_id  is None or\
                 quantity is None:
                 return {"error": "bad request"}, 400
-            wh = next((w for w in warehouses if w['id'] == id_), None)
+            wh = db_manager.warehouse.GetByID(id)
             if not wh:
                 return {"error": "warehouse not found"}, 404
-
-            item = {
-                "id": len(warehouse_items),
-                "product_id": api.payload['product_id'],
-                "warehouse_id": api.payload['warehouse_id'],
-                "quantity": api.payload['quantity']
-            }
-            warehouse_items.append(item)
+            
+            item = db_manager.warehouse_inventory.Insert(
+                warehouse_id,
+                product_id, 
+                quantity)            
             return item, 201
 
     @api.route('/<int:id>/inventory/<int:item_id>')
@@ -180,10 +146,10 @@ def create_api_warehouse(db_manager):
             description='Get inventory item with item_id from warehouse with ID')
         @api.marshal_with(warehouse_item_model)
         def get(self,id,item_id):
-            wh = next((w for w in warehouses if w['id'] == id), None)
-            if not wh:
+            wh_entries = db_manager.warehouse_inventory.GetByWarehouseID(id)  
+            if not wh_entries:
                 return {"error": "warehouse not found"}, 404
-            item = next((i for i in warehouse_items if i['id'] == item_id), None)
+            item = next((i for i in wh_entries if i['id'] == item_id), None)
             if not item:
                 return {"error": "item not found"}, 404
             return item, 200
@@ -194,36 +160,40 @@ def create_api_warehouse(db_manager):
             security="jsonWebToken")
         @api.expect(warehouse_item_model)
         @api.marshal_with(warehouse_item_model)
-        def put(self,id,item_id):
-            wh = next((w for w in warehouses if w['id'] == id), None)
+        def put(self,id,item_id):            
+            wh = db_manager.warehouse.GetByID(id)
             if not wh:
                 return {"error": "warehouse not found"}, 404
-            item = next((i for i in warehouse_items if i['id'] == item_id), None)
+            item = db_manager.warehouse_inventory.GetByID(item_id)
             if not item:
                 return {"error": "item not found"}, 404
-            
-            item['product_id'] = api.payload['product_id']
-            item['warehouse_id'] = api.payload['warehouse_id']
-            item['quantity'] = api.payload['quantity']
+            # check for key errors
+            product_id = parse_dict_key(api.payload, 'product_id')
+            warehouse_id = parse_dict_key(api.payload, 'warehouse_id')
+            quantity = parse_dict_key(api.payload, 'quantity')
+            item = db_manager.warehosue_inventory.Update(
+                item_id,
+                warehouse_id,
+                product_id,
+                quantity
+                )        
             return item, 200
 
         @jwt_required()
         @api.doc( 
             description='Delete inventory item with item_id from warehouse with ID',
             security="jsonWebToken")
-        def delete(self,id,item_id):
-            wh = next((w for w in warehouses if w['id'] == id), None)
+        def delete(self,id,item_id):            
+            wh = db_manager.warehouse.GetByID(id)
             if not wh:
                 return {"error": "warehouse not found"}, 404
-            item = next((i for i in warehouse_items if i['id'] == item_id), None)
+            item = db_manager.warehouse_inventory.GetByID(item_id)
             if not item:
                 return {"error": "item not found"}, 404
 
-            for i, w in enumerate(warehouse_items):
-                if w['id'] == item_id:
-                    del warehouse_items[i]
-                    break
-
+            result = db_manager.warehouse_inventory.Delete(item_id)
+            if not result:
+                return {"error": "inventory not deleted"}, 400
             return {"message": "inventory deleted"}, 200
 
 
