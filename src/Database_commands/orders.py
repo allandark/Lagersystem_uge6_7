@@ -11,7 +11,7 @@ class OrdersModel:
 
                 myresult = cursor.fetchall()
         
-            return myresult
+            return self._totuple(myresult)
         except Exception as e:
             print("Error getting all orders:", e)
             return False
@@ -40,7 +40,7 @@ class OrdersModel:
 
                 myresult = cursor.fetchall()
         
-            return myresult
+            return self._totuple(myresult)
         except Exception as e:
             print("Error getting orders by orderID:", e)
             return False
@@ -115,7 +115,9 @@ class OrdersModel:
             with self.db.cursor(dictionary = True) as cursor:
                 query = f"UPDATE orders SET produktID = {produktID}, invoicenummer = {invoicenummer}, customerid = {customerid}, status = '{status}', mængde = {mængde}, lagerID = {lagerID} WHERE OrderID = {orderID}"
                 cursor.execute(query)
+                result = cursor.fetchall()
             self.db.commit()
+            return result
         except Exception as e:
             print("Error updating order:", e)
             return False

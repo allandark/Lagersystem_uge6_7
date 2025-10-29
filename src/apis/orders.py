@@ -23,9 +23,9 @@ def create_api_orders(db_manager):
         def get(self, id):
             result = db_manager.orders.GetByID(id)
             if result == []:
-                return jsonify({'message': 'Order does not exist'})
+                return jsonify({'message': 'Order does not exist'}, 404)
             else:
-                return jsonify({"Orders ": result})
+                return result
 
     @api.route("/")
     class Order(Resource):
@@ -33,7 +33,7 @@ def create_api_orders(db_manager):
         @api.doc('Get all orders')
         def get(self):
             result = db_manager.orders.GetAll()
-            return jsonify({"Orders": result})
+            return result
 
         @api.doc('Receive a new order')
         @api.expect(orders_model)
@@ -50,7 +50,7 @@ def create_api_orders(db_manager):
             else:
                 result = db_manager.orders.Insert(produktID, invoicenummer, customerID, status, mængde, lagerID)
             #orders_list.append({'id': {orderID}, 'produktID': {produktID}, 'warelist': {warelist}, 'total': {total}})
-            return jsonify({'New order': result})
+            return result
         
         @api.doc("Update order")
         @api.expect(orders_model)
@@ -68,7 +68,7 @@ def create_api_orders(db_manager):
             else:    
                 db_manager.orders.UpdateOrder(orderID, produktID, invoicenummer, customerID, status, mængde, lagerID)
             result = db_manager.orders.GetByID(orderID)
-            return jsonify({'Updated order': result})
+            return result
         
         @api.doc("Delete order")
         @api.expect(remove_orders_model)
