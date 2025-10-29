@@ -14,26 +14,6 @@ authorizations = {
     }
 }
 
-
-
-
-# TEMP: Move to db
-test_users = []
-test_data = {
-    "key1": 1,
-    "key2": "value"
-}
-
-# TODO: move to config
-admin_user: dict[str] = {
-            "id": 0,
-            "username": "admin",
-            "password_hash": generate_password_hash("Password12!")
-        }
-
-test_users.append(admin_user)
-# END: Test
-
 def create_api_auth(db_manager):
 
     api: Namespace = Namespace("auth", description="Authentication namespace", authorizations=authorizations)
@@ -59,23 +39,19 @@ def create_api_auth(db_manager):
         '''
         @api.doc('Login to user')
         @api.expect(login_model)    
-        def post(self):
-            # TEMP: find user from db
-            user: dict[str] = None
-            
-            for u in test_users:
-                if u['username'] == api.payload["username"]:            
-                    user = u
-
+        def post(self):            
+            users = db_manager.admin.GetAll()
+            user = next((u for u in users if u["name"] == api.payload["username"]), None)
 
             status : bool = True
-            if not user:
+            if user is None:
                 status = False
-            if not check_password_hash(user["password_hash"],api.payload["password"]):
+            elif not check_password_hash(user["password_hash"],api.payload["password"]):
                 status = False
+
             if not status:
                 return {"error": "Invalid user or password"}, 401
-            return {"access_token": create_access_token(user["username"])}
+            return {"access_token": create_access_token(user["name"])}
 
     @api.route('/register')
     class Register(Resource):
@@ -87,16 +63,12 @@ def create_api_auth(db_manager):
         @api.expect(login_model)
         @api.marshal_with(user_model, code=201)
         def post(self):
-            user: dict[str] = {
-                "id": len(test_users),
-                "username": api.payload["username"],
-                "password_hash": generate_password_hash(api.payload["password"])
-            }
 
-            # TODO: add to db instead
-            test_users.append(user)
-            
-            return {"id": user["id"], "name": user["username"]}, 201
+            user = db_manager.admin.Insert( 
+                api.payload["username"],
+                generate_password_hash(api.payload["password"]))
+
+            return user, 201
 
 
     @api.route('/change_password')
@@ -109,19 +81,24 @@ def create_api_auth(db_manager):
         # @api.marshal_with( code=200)
         def post(self):
             user_id = get_jwt_identity()
-            user: dict[str] = None
-            for u in test_users:
-                if u['username'] == user_id:
-                    user = u
-            if not user:
-                return {"error": "User does not exist"}, 401
+            users = db_manager.admin.GetAll()
+            user = next((u for u in users if u["name"] == user_id), None)
+            
+            if user is None:
+                return {"error": "User does not exist"}, 404
 
             if not check_password_hash(user["password_hash"],api.payload["old_password"]):
                 return {"error": "Wrong old password provided"}, 401
             
-            user['password_hash'] = generate_password_hash(api.payload["new_password"])
+            user = db_manager.admin.Update(
+                admin_id=user["id"],
+                name=user["name"],
+                password_hash=generate_password_hash(api.payload["new_password"])
+            )
+            if user is False:
+                return {"error": "could not change password"}, 401
 
-            return {"message" : "Password updated"}, 200
+            return user, 200
 
 
 
@@ -135,30 +112,21 @@ def create_api_auth(db_manager):
         # @api.marshal_with(code=200)
         def post(self):
             user_id = get_jwt_identity()
-            user: dict[str] = None
-            for u in test_users:
-                if u['username'] == user_id:
-                    user = u
+            users = db_manager.admin.GetAll()
+            user = next((u for u in users if u["name"] == user_id), None)
+
             if not user:
-                return {"error": "User does not exist"}, 401
+                return {"error": "User does not exist"}, 404
             
-            # TODO: check valid names
-            user['username'] = api.payload['new_username']
-            test_users[user['id']] = user
-            return {"message" : "Username updated"}, 200
+           
+            user = db_manager.admin.Update(
+                admin_id=user["id"],
+                name=api.payload["new_username"],
+                password_hash=user["password_hash"])
+            
+            return user, 200
 
 
-
-    # TEMP: remove when actual endpoints are there
-    @api.route('/tests')
-    class Test(Resource):
-        ''' Test endpoint
-        '''
-
-        @jwt_required()  
-        @api.doc('Test endpoint with authentication requirements',security="jsonWebToken")
-        def get(self):
-            return test_data
 
     return api
 
