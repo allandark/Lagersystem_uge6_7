@@ -7,7 +7,7 @@ from apis.auth import authorizations
 def create_api_product(db_manager):
     api: Namespace = Namespace("product", description="Product namespace", authorizations=authorizations)
 
-    product_list = list(("aluminium", "banana", "apple", "car"))
+    #product_list = list(("aluminium", "banana", "apple", "car"))
 
     new_product_model: Model = api.model('NewProductModel', {
             'id': fields.Integer(required=True, description = "Product ID"),
@@ -71,6 +71,10 @@ def create_api_product(db_manager):
         def delete(self):
             ID = api.payload['id']
             result = db_manager.products.GetById(ID)
+            if result == []:
+                return jsonify({"message": "Product doesn't exist"})
+            else:
+                db_manager.products.UpdateItemStatus(ID, "Inactive")
             #result = db_manager.products.RemoveItem(ID)
             return jsonify({'Removed product': result})
 

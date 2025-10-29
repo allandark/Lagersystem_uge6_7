@@ -1,20 +1,20 @@
-insert into Produkts(pris, navn)
-value(3.69,"Duck - Breast");
+insert into Produkts(pris, navn, status)
+value(3.69,"Duck - Breast", "Active");
 
-insert into Produkts(pris, navn)
-value(9.75,"Seabream Whole Farmed");
+insert into Produkts(pris, navn, status)
+value(9.75,"Seabream Whole Farmed", "Active");
 
-insert into Produkts(pris, navn)
-value(0.35,"Wine - Red, Lurton Merlot De");
+insert into Produkts(pris, navn, status)
+value(0.35,"Wine - Red, Lurton Merlot De", "Active");
 
-insert into Produkts(pris, navn)
-value(2.39,"Artichoke - Hearts, Canned");
+insert into Produkts(pris, navn, status)
+value(2.39,"Artichoke - Hearts, Canned", "Active");
 
-insert into Produkts(pris, navn)
-value(5.44,"Rum - Spiced, Captain Morgan");
+insert into Produkts(pris, navn, status)
+value(5.44,"Rum - Spiced, Captain Morgan", "Active");
 
-insert into Produkts(pris, navn)
-value(5.43,"Cheese Cloth No 100");
+insert into Produkts(pris, navn, status)
+value(5.43,"Cheese Cloth No 100", "Active");
 
 insert into lagers(navn)
 value("odense");
