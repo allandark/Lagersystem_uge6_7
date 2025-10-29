@@ -7,9 +7,9 @@ from flask import Flask, jsonify, request
 def create_api_orders(db_manager):
     api: Namespace = Namespace("orders", description="Order namespace", authorizations=authorizations)
 
-    orders_model = api.model('OrderModel', {'id': fields.Integer, 'name': fields.String, 'warelist': fields.String, 'total': fields.Integer})
+    orders_model = api.model('OrderModel', {'orderID': fields.Integer, 'produktID': fields.Integer, 'invoicenummer': fields.Integer, 'customerID': fields.Integer, 'status': fields.String, 'mængde': fields.Integer, 'lagerID': fields.Integer})
 
-    rmeove_orders_model = api.model('RemoveOrderModel', {'id': fields.Integer})
+    remove_orders_model = api.model('RemoveOrderModel', {'orderID': fields.Integer})
 
     orders_list = [
         {'id': 0, 'name': "Viktor", 'warelist': ['banana', 'planes', 'car'], 'total': 500},
@@ -20,38 +20,65 @@ def create_api_orders(db_manager):
     @api.route("/<int:id>")
     class OrderGet(Resource):
         @api.doc('Get an order based on ID')
-        @api.marshal_with(orders_model, skip_none=True, code=200)
         def get(self, id):
-            return {"id":id}, 200
+            result = db_manager.orders.GetByID(id)
+            if result == []:
+                return jsonify({'message': 'Order does not exist'})
+            else:
+                return jsonify({"Orders ": result})
 
     @api.route("/")
     class Order(Resource):
         
+        @api.doc('Get all orders')
+        def get(self):
+            result = db_manager.orders.GetAll()
+            return jsonify({"Orders": result})
+
         @api.doc('Receive a new order')
         @api.expect(orders_model)
         def post(self):
-            ID = api.payload['id']
-            name = api.payload['name']
-            warelist = api.payload['warelist']
-            total = api.payload['id']
-            orders_list.append({'id': {ID}, 'name': {name}, 'warelist': {warelist}, 'total': {total}})
-            return jsonify({'New order': list(orders_list[ID])})
+            orderID = api.payload['orderID']
+            produktID = api.payload['produktID']
+            invoicenummer = api.payload['invoicenummer']
+            customerID = api.payload['customerID']
+            status = api.payload['status']
+            mængde = api.payload['mængde']
+            lagerID = api.payload['lagerID']
+            if ((orderID == 0) or (produktID == 0) or (customerID == 0) or (lagerID == 0)):
+                return jsonify({'message': 'Invalid order'})
+            else:
+                result = db_manager.orders.Insert(produktID, invoicenummer, customerID, status, mængde, lagerID)
+            #orders_list.append({'id': {orderID}, 'produktID': {produktID}, 'warelist': {warelist}, 'total': {total}})
+            return jsonify({'New order': result})
         
         @api.doc("Update order")
         @api.expect(orders_model)
         def put(self):
-            ID = api.payload['id']
-            name = api.payload['name']
-            warelist = api.payload['warelist']
-            total = api.payload['id']
-            orders_list[ID] = f"'id': {ID}, 'name': {name}, 'warelist': {warelist}, 'total': {total}"
-            return jsonify({'Updated order': orders_list[ID]})
+            orderID = api.payload['orderID']
+            produktID = api.payload['produktID']
+            invoicenummer = api.payload['invoicenummer']
+            customerID = api.payload['customerID']
+            status = api.payload['status']
+            mængde = api.payload['mængde']
+            lagerID = api.payload['lagerID']
+            result = db_manager.orders.GetByID(orderID)
+            if result == []:
+                return jsonify({"message": "Order does not exist"})
+            else:    
+                db_manager.orders.UpdateOrder(orderID, produktID, invoicenummer, customerID, status, mængde, lagerID)
+            result = db_manager.orders.GetByID(orderID)
+            return jsonify({'Updated order': result})
         
         @api.doc("Delete order")
-        @api.expect(rmeove_orders_model)
+        @api.expect(remove_orders_model)
         def delete(self):
-            ID = api.payload['id']
-            order = orders_list.pop(ID)
-            return jsonify({'Removed order': order}, 200)
+            orderID = api.payload['orderID']
+            result = db_manager.orders.GetByID(orderID)
+            if result == []:
+                return jsonify({'message': 'Order does not exist'})
+            else:
+                result = db_manager.orders.UpdateStatus(orderID, "Inactive")
+            return jsonify({'Removed order': result})
         
     return api
