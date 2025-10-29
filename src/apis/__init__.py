@@ -22,11 +22,11 @@ def create_api(
         doc= use_swagger
     )
 
-    api.add_namespace(create_api_auth(db_manager))
-    api.add_namespace(create_api_product(db_manager))
-    api.add_namespace(create_api_warehouse(db_manager))
-    api.add_namespace(create_api_customer(db_manager))
-    api.add_namespace(create_api_orders(db_manager))
+    api.add_namespace(create_api_auth(db_manager), path="/api/auth")
+    api.add_namespace(create_api_product(db_manager), path="/api/product")
+    api.add_namespace(create_api_warehouse(db_manager), path="/api/warehouse")
+    api.add_namespace(create_api_customer(db_manager), path="/api/customer")
+    api.add_namespace(create_api_orders(db_manager), path="/api/orders")
     # Add more endpoints here
 
     return api
