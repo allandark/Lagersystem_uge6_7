@@ -15,7 +15,7 @@ This is a RESTful API utilizing a MySQL server to simulate keeping track of orde
 * Python 3.11
 
 ### Installing
-
+#### Backend
 * Download the code as a .zip-folder.
 * Navigate to the folder, where you downloaded it.
 * Open a Python terminal.
@@ -32,6 +32,15 @@ This is a RESTful API utilizing a MySQL server to simulate keeping track of orde
 pip install -r requirements.txt
 ```
 * This will install all the necessary libraries for running the program
+
+#### Frontend
+* Install node.js.
+* Go to `lager-frontend` dir.
+* Run commands
+```
+npm install
+npm run build
+```
 ### Executing program
 
 * In Visual Studio Code:
