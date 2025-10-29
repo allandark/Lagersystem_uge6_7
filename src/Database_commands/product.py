@@ -93,12 +93,39 @@ class ProductModel:
                 cursor.execute(f"SELECT * FROM produkts where navn = %s ", (name,))
 
                 myresult = cursor.fetchall()
-        
+            
             return self._totuple(myresult)
         except Exception as e:
             print("Error getting product by name:", e)
             return False
+    
+    def UpdateItemStatus(self, id):
+
+        try:
+            with self.db.cursor(dictionary=True) as cursor:
+                cursor.execute(f"DELETE FROM produkts WHERE produktID = {id}")
+                myresult = cursor.fetchall()
+
+            return self._totuple(myresult)
         
+        except Exception as e:
+            print("Error removing product by ID:", e)
+            return False
+        
+    def UpdateProduct(self, id, navn, pris):
+
+        try:
+            with self.db.cursor(dictionary=True) as cursor:
+                command = f"UPDATE produkts SET navn = '{navn}', pris = {pris} WHERE produktID = {id}"
+                print(command)
+                cursor.execute(command)
+                self.db.commit()
+                myresult = self.GetById(id)
+            return self._totuple(myresult)
+        except Exception as e:
+            print("Error updating product:", e)
+            return False
+
     def exist(self,id):
         try:
             with self.db.cursor(dictionary = True) as cursor:

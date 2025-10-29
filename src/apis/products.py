@@ -38,7 +38,7 @@ def create_api_product(db_manager):
             print(products)
             return {"products":products}, 200
         
-    @api.route("/<float:low_price>/<float:high_price>")
+    @api.route("/<float:low_price><float:high_price>")
     class ProductGetByPriceInterval(Resource):
         @api.doc('Get product based on price')
         def get(self, low_price, high_price):
@@ -57,7 +57,13 @@ def create_api_product(db_manager):
         @api.expect(update_product_model)
         def put(self):
             product_ID = api.payload['id']
+            product_name = api.payload['name']
+            product_price = api.payload['price']
             result = db_manager.products.GetById(product_ID)
+            if result == []:
+                return jsonify({"message": "Product not found"})
+            else:
+                result = db_manager.products.UpdateProduct(product_ID, product_name, product_price)
             return jsonify({'New product': result})
 
         @api.doc('Remove product')
@@ -65,6 +71,7 @@ def create_api_product(db_manager):
         def delete(self):
             ID = api.payload['id']
             result = db_manager.products.GetById(ID)
+            #result = db_manager.products.RemoveItem(ID)
             return jsonify({'Removed product': result})
 
 
