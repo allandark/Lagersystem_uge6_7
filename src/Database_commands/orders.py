@@ -6,11 +6,15 @@ class OrdersModel:
     
     def GetAll(self):
         try:
-            self.db.execute("SELECT * FROM orders")
+            with self.db.cursor() as cursor:
+                cursor.execute("SELECT * FROM orders")
 
-            myresult = self.db.fetchall()
+                myresult = cursor.fetchall()
+                orders = []
+                for ord in myresult:
+                    orders.append(self._totuple(ord))
         
-            return myresult
+            return orders
         except Exception as e:
             print("Error getting all orders:", e)
             return False
@@ -19,10 +23,14 @@ class OrdersModel:
     def Insert(self, produktID,invoicenummer,customerid,status,mængde,lagerID):
         
         try:
-            query = "INSERT INTO orders (produktID, invoicenummer,customerid,status,mængde,lagerID) VALUES (%s, %s, %s,%s, %s, %s)"
+            with self.db.cursor(dictionary=True) as cursor:
+                query = "INSERT INTO orders (produktID, invoicenummer,customerid,status,mængde,lagerID) VALUES (%s, %s, %s,%s, %s, %s)"
 
-            self.db.execute(query, (produktID, invoicenummer, customerid,status,mængde,lagerID))
+                cursor.execute(query, (produktID, invoicenummer, customerid,status,mængde,lagerID))
+                result = cursor.fetchall()
+                #n_id = cursor.lastrowid
             self.db.commit()
+            #result = self.GetByProductID(produktID)
             return True
         except Exception as e:
             print("Error inserting orders:", e)
@@ -30,11 +38,12 @@ class OrdersModel:
     def GetByID(self, OrderID):
         
         try:
-            self.db.execute(f"SELECT * FROM orders where OrderID = %s ", (OrderID,))
+            with self.db.cursor() as cursor:
+                cursor.execute(f"SELECT * FROM orders where OrderID = %s ", (OrderID,))
 
-            myresult = self.db.fetchall()
+                myresult = cursor.fetchall()
         
-            return myresult
+            return self._totuple(myresult[0])
         except Exception as e:
             print("Error getting orders by orderID:", e)
             return False
@@ -42,9 +51,10 @@ class OrdersModel:
     def GetByProductID(self, produktID):
         
         try:
-            self.db.execute(f"SELECT * FROM orders where produktID = %s ", (produktID,))
+            with self.db.cursor(dictionary=True) as cursor:
+                cursor.execute(f"SELECT * FROM orders where produktID = %s ", (produktID,))
 
-            myresult = self.db.fetchall()
+                myresult = cursor.fetchall()
         
             return myresult
         except Exception as e:
@@ -101,16 +111,30 @@ class OrdersModel:
         except Exception as e:
             print("Error getting orders by invoicenumber:", e)
             return False
-        
+    
+    def UpdateOrder(self, orderID, produktID,invoicenummer,customerid,status,mængde,lagerID):
+
+        try:
+            with self.db.cursor(dictionary = True) as cursor:
+                query = f"UPDATE orders SET produktID = {produktID}, invoicenummer = {invoicenummer}, customerid = {customerid}, status = '{status}', mængde = {mængde}, lagerID = {lagerID} WHERE OrderID = {orderID}"
+                cursor.execute(query)
+                result = cursor.fetchall()
+            self.db.commit()
+            return result
+        except Exception as e:
+            print("Error updating order:", e)
+            return False
+
     def UpdateStatus(self, OrderID,newStatus):
         
         try:
-            query = "UPDATE orders SET status = %s WHERE OrderID = %s"
+            with self.db.cursor(dictionary = True) as cursor:
+                query = "UPDATE orders SET status = %s WHERE OrderID = %s"
 
-            self.db.execute(query, (newStatus, OrderID))
+                cursor.execute(query, (newStatus, OrderID))
             self.db.commit()
         
-            return True
+            return self.GetByID(OrderID)
         except Exception as e:
             print("Error updateing orders status:", e)
             return False
@@ -135,3 +159,16 @@ class OrdersModel:
         except Exception as e:
             print("Error getting orders in customerview:", e)
             return False
+
+    def _totuple(self, myresult):
+        result = {
+                "orderID": myresult[0],
+                "produktID": myresult[1],
+                "invoicenummer": myresult[2],
+                "customerID": myresult[3],
+                "status": myresult[4],
+                "mængde": myresult[5],
+                "lagerID": myresult[6]
+            }
+        return result
+    

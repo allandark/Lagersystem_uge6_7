@@ -2,7 +2,7 @@ CREATE TABLE Produkts (
     produktID int not null AUTO_INCREMENT,
     pris float not null,
     navn varchar(55) not null,
-    status varchar(55) not null,
+    status varchar(55) not null DEFAULT 'Active',
     PRimary key (produktID)
 );
 

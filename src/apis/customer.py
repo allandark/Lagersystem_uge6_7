@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields, Model, reqparse
 from flask import Flask, jsonify, request
 from flask_restx import Api, Resource
+from flask_jwt_extended import jwt_required
 from apis.auth import authorizations
 
 
@@ -12,55 +13,78 @@ def create_api_customer(db_manager):
     {"id":1, "name": "Viktor"},
     {"id":2, "name": "Luke"},
     ]
-    get_customer_model: Model = api.model('GetCustomerModel', {'id': fields.Integer(required=True, description='Customer ID number'),
-                                            'name': fields.String(required=True, description='Name of customer')})
 
-    new_customer_model: Model = api.model('NewCustomerModel', {'id': fields.Integer(required=True, description='Customer ID number'),
-                                            'name': fields.String(required=True, description='Name of customer')})
+    new_customer_model: Model = api.model('NewCustomerModel', {'customerid': fields.Integer(required=True, description='Customer ID number'),
+                                            'name': fields.String(required=True, description='Name of customer'),
+                                            'email': fields.String(required=True, description="Customer email")})
 
-    update_customer_model: Model = api.model('UpdateCustomerModel', {'id': fields.Integer(required=True, description='Customer ID number'),
-                                            'new_name': fields.String(required=True, description='New name of customer')})
+    update_customer_model: Model = api.model('NewCustomerModel', {'customerid': fields.Integer(required=True, description='Customer ID number'),
+                                            'name': fields.String(required=True, description='Name of customer'),
+                                            'email': fields.String(required=True, description="Customer email")})
 
-    remove_customer_model: Model = api.model('RemoveCustomerModel', {'id': fields.Integer(required=True, description='Customer ID number'),
-                                            'name': fields.String(required=True, description='New name of customer')})
-    @api.route("/<int:id>&<string:name>")
+    remove_customer_model: Model = api.model('RemoveCustomerModel', {'id': fields.Integer(required=True, description='Customer ID number')})
+    
+    @api.route("/<int:id>")
     class CustomerGet(Resource):
         
         @api.doc('Get the customer based on the ID number')
-        @api.marshal_with(get_customer_model, code = 200)
-        def get(self, id, name):
-            customer = customer_dict[id]
-            return jsonify({"Customer": id}), 200
+        def get(self, id):
+            result = db_manager.customers.GetById(id)
+            return result
         
-    @api.route("/new")
-    class CustomerPost(Resource):
-        @api.doc('Add a new customer')
+    @api.route("/")
+    class Customer(Resource):
+
+        @api.doc('Get all customers')
+        def get(self):
+            result = db_manager.customers.GetAll()
+            return result
+
+        @jwt_required()
+        @api.doc('Add a new customer', security='jsonWebToken')
         @api.expect(new_customer_model)
         def post(self):
-            ID = api.payload['id']
+            ID = api.payload['customerid']
             name = api.payload['name']
-            customer_dict.append({"id": ID, "name": name}) 
-            return jsonify({'New customer': customer_dict[ID]})
-        
-    @api.route("/update")
-    class CustomerUpdate(Resource):
+            email = api.payload['email']
+            check_email = db_manager.customers.GetByEmail(email)
+            check_name = db_manager.customers.GetById(ID)
+            if (check_email != []):
+                return jsonify({"message": "Email already exists"}, 404)
+            elif check_name != []:
+                return jsonify({"message": "ID already exists"})
+            else:
+                result = db_manager.customers.Insert(name, email)
+                return result
 
-        @api.doc('Update customer info')
+        @jwt_required()
+        @api.doc('Update customer info', security='jsonWebToken')
         @api.expect(update_customer_model)
         def put(self):
-            ID = api.payload['id']
-            name = api.payload['new_name']
-            customer_dict[ID] = {"id": ID, "name": name}
-            return jsonify({"Updated customer": customer_dict[ID]})
-        
-    @api.route("/remove")
-    class CustomerDelete(Resource):
-
-        api.doc('Delete a customer')
-        api.expect(remove_customer_model)
+            ID = api.payload['customerid']
+            name = api.payload['name']
+            email = api.payload['email']
+            result = db_manager.customers.GetById(ID)
+            if result == []:
+                return jsonify({"message": "Customer doesn't exist"}, 404)
+            else:
+                result = db_manager.customers.GetByEmail(email)
+                if result != []:
+                    return jsonify({"message": "Email already exists"}, 404)
+                else:
+                    result = db_manager.customers.Update(ID, name, email)
+                return result
+            
+        @jwt_required()
+        @api.doc('Delete a customer', security='jsonWebToken')
+        @api.expect(remove_customer_model)
         def delete(self):
             ID = api.payload['id']
-            customer_dict.pop(ID)
-            return jsonify({'Removed customer': customer_dict})
+            result = db_manager.customers.GetById(ID)
+            if result == []:
+                return jsonify({"message": "Customer doesn't exist"}, 404)
+            else:
+                result = db_manager.customers.Update(ID, ID, ID)
+            return result
 
     return api
