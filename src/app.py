@@ -6,7 +6,16 @@ from database_commands.product import ProductModel
 from core.config import Config, ReadConfigFile
 from core.utils import create_admin_user
 from flask_cors import CORS
+import os
 
+
+ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+
+def get_origin(origin):
+    return origin if origin in ALLOWED_ORIGINS else None
 
 
 
@@ -23,10 +32,10 @@ def create_app():
     
     app = Flask(
         __name__, 
-        static_folder="../lager-frontend/dist",
-        static_url_path="/")
+        static_folder="..\\lager-frontend\\dist",
+        static_url_path="")
     app.wsgi_app = ProxyFix(app.wsgi_app)
-    CORS(app) 
+    CORS(app, origins=["http://localhost:5173"], supports_credentials=True) 
 
     app.config["JWT_SECRET_KEY"] = config.jwt_token
     app.config["DEBUG"] = config.debug
@@ -36,13 +45,14 @@ def create_app():
 
 
     # Create the endpoint to serve the frontpage
-    @app.route("/", defaults={"path": ""})
-    @app.route("/<path:path>")
-    def serve_react(path):
-        if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-            return send_from_directory(app.static_folder, path)
-        else:
-            return send_from_directory(app.static_folder, "index.html")
+    @app.route("/")
+    @app.route("/products")
+    @app.route("/customer")
+    @app.route("/admin")
+    def serve_react():  
+        return send_from_directory(app.static_folder, 'index.html')
+
+
 
     # create the api
     api = create_api(
