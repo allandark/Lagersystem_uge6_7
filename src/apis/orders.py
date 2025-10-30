@@ -35,7 +35,8 @@ def create_api_orders(db_manager):
             result = db_manager.orders.GetAll()
             return result
 
-        @api.doc('Receive a new order')
+        @jwt_required()
+        @api.doc('Receive a new order', security='jsonWebToken')
         @api.expect(orders_model)
         def post(self):
             orderID = api.payload['orderID']
@@ -52,7 +53,8 @@ def create_api_orders(db_manager):
             #orders_list.append({'id': {orderID}, 'produktID': {produktID}, 'warelist': {warelist}, 'total': {total}})
             return result
         
-        @api.doc("Update order")
+        @jwt_required()
+        @api.doc("Update order", security='jsonWebToken')
         @api.expect(orders_model)
         def put(self):
             orderID = api.payload['orderID']
@@ -70,7 +72,8 @@ def create_api_orders(db_manager):
             result = db_manager.orders.GetByID(orderID)
             return result
         
-        @api.doc("Delete order")
+        @jwt_required()
+        @api.doc("Delete order", security='jsonWebToken')
         @api.expect(remove_orders_model)
         def delete(self):
             orderID = api.payload['orderID']
