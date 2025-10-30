@@ -27,11 +27,29 @@ class CustomersModel:
         try:
             with self.db.cursor() as cursor:
                 cursor.execute(f"SELECT * FROM customers where customerid = %s ", (id,))
-                myresult = cursor.fetchall()        
-                return CustomersModel._toTuple(myresult[0])
+                myresult = cursor.fetchall()    
+                if myresult == []:
+                    return []
+                else:    
+                    return CustomersModel._toTuple(myresult[0])
 
         except Exception as e:
-            print("Error checking if product exist by id:", e)
+            print("Error checking if customer exist by id:", e)
+            return False
+    
+    def GetByEmail(self, email):
+
+        try:
+            with self.db.cursor() as cursor:
+                cursor.execute(f"SELECT * FROM customers where email = %s ", (email,))
+                myresult = cursor.fetchall()
+                if myresult == []:
+                    return []
+                else:      
+                    return CustomersModel._toTuple(myresult[0])
+
+        except Exception as e:
+            print("Error checking if customer exist by email:", e)
             return False
         
     def Insert(self, name, email):

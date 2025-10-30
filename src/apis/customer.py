@@ -45,8 +45,12 @@ def create_api_customer(db_manager):
             ID = api.payload['customerid']
             name = api.payload['name']
             email = api.payload['email']
-            if ((ID == 0) or (name == "") or (email == "")):
-                return jsonify({"message": "Invalid customer"}, 404)
+            check_email = db_manager.customers.GetByEmail(email)
+            check_name = db_manager.customers.GetById(ID)
+            if (check_email != []):
+                return jsonify({"message": "Email already exists"}, 404)
+            elif check_name != []:
+                return jsonify({"message": "ID already exists"})
             else:
                 result = db_manager.customers.Insert(name, email)
                 return result
@@ -58,20 +62,25 @@ def create_api_customer(db_manager):
             name = api.payload['name']
             email = api.payload['email']
             result = db_manager.customers.GetById(ID)
-            if ID == 0:
-                return jsonify({"message": "Invalid customer"}, 404)
+            if result == []:
+                return jsonify({"message": "Customer doesn't exist"}, 404)
             else:
-                result = db_manager.customers.Update(ID, name, email)
+                result = db_manager.customers.GetByEmail(email)
+                if result != []:
+                    return jsonify({"message": "Email already exists"}, 404)
+                else:
+                    result = db_manager.customers.Update(ID, name, email)
                 return result
             
         @api.doc('Delete a customer')
         @api.expect(remove_customer_model)
         def delete(self):
             ID = api.payload['id']
-            if ID == 0:
-                return jsonify({"message": "Invalid customer"}, 404)
+            result = db_manager.customers.GetById(ID)
+            if result == []:
+                return jsonify({"message": "Customer doesn't exist"}, 404)
             else:
-                result = db_manager.customers.Delete(ID)
+                result = db_manager.customers.Update(ID, ID, ID)
             return result
 
     return api
