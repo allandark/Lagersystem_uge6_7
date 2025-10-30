@@ -22,7 +22,7 @@ def create_api_product(db_manager):
             'name': fields.String(required=True, description='Name of product'),
             'price': fields.Float(required=True, description="Poduct price")})
 
-    @api.route("/<int:id>")
+    @api.route("/id<int:id>")
     class ProductGetById(Resource):
         @api.doc('Get product based on ID')
         def get(self, id):
@@ -30,22 +30,24 @@ def create_api_product(db_manager):
             print(products)
             return {"products":products}, 200
         
-    @api.route("/<float:price>")
+    @api.route("price/<price>")
     class ProductGetByPrice(Resource):
         @api.doc('Get product based on price')
         def get(self, price):
+            newPrice = float (price)
             products = db_manager.products.GetByPrice(price)
             print(products)
             return {"products":products}, 200
         
-    @api.route("/<float:low_price><float:high_price>")
+    @api.route("/price-range/<range>")
     class ProductGetByPriceInterval(Resource):
         @api.doc('Get product based on price')
-        def get(self, low_price, high_price):
+        def get(self, range):
+            low_price, high_price = map(float, range.split('-'))
             products = db_manager.products.GetPriceByInterval(low_price, high_price)
             print(products)
             return {"products":products}, 200
-    
+            
     @api.route("/")
     class Product(Resource):
         @api.doc("Get all products")
