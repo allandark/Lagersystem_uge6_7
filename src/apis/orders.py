@@ -1,6 +1,5 @@
 from flask_restx import Namespace, Resource, fields, Model
 from flask_jwt_extended import jwt_required
-from flask_jwt_extended import jwt_required
 from apis.auth import authorizations
 from flask import Flask, jsonify, request
 
