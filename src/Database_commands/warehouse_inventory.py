@@ -9,7 +9,8 @@ class WarehuseInventoryModel:
     def GetALL(self):
         
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute("SELECT * FROM lager_manger")
 
                 myresult = cursor.fetchall()
@@ -26,7 +27,8 @@ class WarehuseInventoryModel:
     def GetByID(self, id):
 
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute(f"SELECT * FROM lager_manger where lagermangerID = %s ", (id,))
                 myresult = cursor.fetchall()
                 return WarehuseInventoryModel._tuple2Dict(myresult[0])
@@ -37,7 +39,8 @@ class WarehuseInventoryModel:
     def GetByProductID(self,produktID):
         
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute(f"SELECT * FROM lager_manger where produktID = %s ", (produktID,))
                 myresult = cursor.fetchall()
                 result = []
@@ -51,7 +54,8 @@ class WarehuseInventoryModel:
     def GetByWarehouseID(self,lagerID):
         
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute(f"SELECT * FROM lager_manger where lagerID = %s ", (lagerID,))
                 myresult =cursor.fetchall()
                 result = []
@@ -66,12 +70,13 @@ class WarehuseInventoryModel:
         
         try:
             n_id = -1
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 query = "INSERT INTO lager_manger (lagerID, produktID,antal) VALUES (%s, %s, %s)"
 
                 cursor.execute(query, (lagerID, produktID,antal))
                 n_id = cursor.lastrowid
-            self.db.commit()
+            conn.commit()
             wh = {
                 "id": n_id,
                 "warehouse_id": lagerID,
@@ -84,15 +89,16 @@ class WarehuseInventoryModel:
             return False
 
     def Update(self, id, lagerID, produktID, antal):
-        try:            
-            with self.db.cursor() as cursor:
+        try:           
+            conn = self.db.get_connection() 
+            with conn.cursor() as cursor:
                 query = """
                     UPDATE lager_manger
                     SET lagerID = %s, produktID = %s, antal = %s
                     WHERE lagermangerID = %s
                 """
                 cursor.execute(query, (lagerID, produktID, antal, id))                
-            self.db.commit()
+            conn.commit()
             wh = {
                 "id": id,
                 "warehouse_id": lagerID,
@@ -106,10 +112,11 @@ class WarehuseInventoryModel:
 
     def Delete(self, id):
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection() 
+            with conn.cursor() as cursor:
                 query = "DELETE FROM lager_manger WHERE lagermangerID = %s"
                 cursor.execute(query, (id,))
-            self.db.commit()
+            conn.commit()
             return True
         except Exception as e:
             print(f"Error deleting LagerManger: {e}")

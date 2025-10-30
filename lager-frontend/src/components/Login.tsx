@@ -1,50 +1,63 @@
-import { useState, useEffect } from 'react';
-import { getToken, setToken } from '../authService';
+import { useState, useEffect  } from 'react';
+import { setToken, getToken } from '../authService';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  
+  const [token, setTokenState] = useState<string | null>(getToken());  
+  const API_URL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
 
     const sendLogin = async () => {
       try {
-        const loginModel = {
-            "username": name,
-            "password": password
-        }
-        console.log(loginModel)
-        const res = await fetch("http://localhost:5000/api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(loginModel),
-        });
+          console.log("Logging in")
+          const loginModel = {
+              "username": name,
+              "password": password
+          }        
+          const res = await fetch(`${API_URL}/api/auth/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(loginModel),
+          });
+          console.log(`Res: ${res}`)
         
-          const data = await res.json();
-          console.log("Login success:", data);
+          const data = await res.json();          
           setToken(data.access_token);
+          setTokenState(data.access_token);
+          navigate("/admin"); 
+          console.log("Login successfull")
+          
         } catch (error) {
           console.error("Login error:", error);
         }
       };
+
+      
+    useEffect(() => {
+        
+        if (token) {
+          console.log("Token found, redirecting...");
+          navigate("/admin"); 
+        }
+      }, []);
 
 
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     sendLogin();
+    
   };
 
-  const token = getToken();
-
+ 
   return (
 
-    <div>
-    {token ? (
-      <div>Token exists: {token}</div>
-    ) : (
+
       <div>
         <form onSubmit={handleSubmit}>
         <label>Username:
@@ -72,6 +85,3 @@ export default function LoginForm() {
         </form>
       </div>
     )}
-    </div>
-    
-  );}

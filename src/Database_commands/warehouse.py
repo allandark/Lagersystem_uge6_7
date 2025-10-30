@@ -8,7 +8,8 @@ class WarehouseModel:
     def GetALL(self):
         
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute("SELECT * FROM lagers")
                 myresult_raw = cursor.fetchall()
                 result = []
@@ -22,7 +23,8 @@ class WarehouseModel:
     def GetByID(self, lagerID):
         
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute(f"SELECT * FROM lagers where lagerID = %s ", (lagerID,))
                 myresult = cursor.fetchall()
                 return WarehouseModel._tuple2Dict(myresult[0])
@@ -33,7 +35,8 @@ class WarehouseModel:
     def GetByName(self, navn):
         
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute(f"SELECT * FROM lagers where navn = %s ", (navn,))
 
                 myresult = cursor.fetchall()
@@ -49,11 +52,12 @@ class WarehouseModel:
         
         try:
             n_id = -1
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 query = "INSERT INTO lagers (navn) VALUES (%s)"
                 cursor.execute(query, (navn,))
                 n_id = cursor.lastrowid
-            self.db.commit()
+            conn.commit()
             wh = {
                 "id": n_id,
                 "name": navn
@@ -65,13 +69,14 @@ class WarehouseModel:
 
     def Update(self, id, navn):
         try:
+            conn = self.db.get_connection()
             query = """
                 UPDATE lagers
                 SET navn = %s
                 WHERE lagerID = %s
             """
 
-            with self.db.cursor() as cursor:
+            with conn.cursor() as cursor:
                 cursor.execute(query, (navn, id))
 
             self.db.commit()
@@ -86,10 +91,11 @@ class WarehouseModel:
 
     def Delete(self, id):
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 query = "DELETE FROM lagers WHERE lagerID = %s"
                 cursor.execute(query, (id,))
-            self.db.commit()
+            conn.commit()
             return True
         except Exception as e:
             print(f"Error deleting lager: {e}")

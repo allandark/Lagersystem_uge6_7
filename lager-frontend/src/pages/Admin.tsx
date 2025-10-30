@@ -1,14 +1,30 @@
 import Layout from "../components/Layout";
 import LoginForm from "../components/Login";
-// import type { Product } from "../types/types";
-// import "./Products.css";
+import RegisterForm from "../components/Register";
+import UserInfo from "../components/UserInfo";
+import UserList from "../components/UserList";
+import { getToken } from '../authService';
 
 export default function AdminPage() {
 
+    const token = getToken()
+
+
     return (
         <Layout>
-            <h2>Admin</h2>
-            <LoginForm/>
+         
+            
+        {token ? (
+        <div>
+            <UserInfo/>
+            <RegisterForm/>
+            <UserList/>
+        </div>
+        ) : (
+        <LoginForm/>
+        )}
+
+            
         </Layout>
     );
 }

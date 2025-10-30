@@ -6,6 +6,19 @@ export interface WarehouseData {
 
 export interface AdminUser{
     id: number;
-    username: string;
-    access_token: string;
+    name: string;
+    password_hash: string;
+}
+
+export interface InventoryData{
+    id: number;
+    product_id: number;
+    warehouse_id: number;
+    quantity: number;
+}
+
+export interface ProductData{
+    id: number;
+    name: string;
+    price: number;
 }

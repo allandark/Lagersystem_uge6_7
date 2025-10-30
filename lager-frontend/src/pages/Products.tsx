@@ -1,17 +1,21 @@
 import Layout from "../components/Layout";
-import type { WarehouseData } from "../types/Types";
+import type { WarehouseData, InventoryData, ProductData  } from "../types/Types";
 import { useState, useEffect } from 'react';
 
 
 export default function ProductsPage() {
 
-    const [warehouses, setWarehouses] = useState<WarehouseData[]>([]);
-    const [wh, setWh] = useState<WarehouseData|null>(null);
-    const [wh_id, setWhId] = useState(1);
+    const [warehouses, setWarehouses] = useState<WarehouseData[]>([]);    
+    const [currentInventory, setcurrentInventory] = useState<InventoryData[]>([]);
+    const [currentProduct, setcurrentProduct] = useState<ProductData|null>(null);
+
+    
+
+    const API_URL = import.meta.env.VITE_API_URL;
 
     const getWarehouses = async () =>{
         try{
-            const res = await fetch("http://localhost:5000/api/warehouse/")
+            const res = await fetch(`${API_URL}/api/warehouse/`)
             const data: WarehouseData[] = await res.json()
             setWarehouses(data)
             console.log("Found warehouses: ", data)
@@ -21,51 +25,61 @@ export default function ProductsPage() {
         }                    
     }
 
-        const getWarehouse = async (id: number) =>{
+    // const getWarehouse = async (id: number) =>{
+    //     try{
+    //         const res = await fetch(`/api/warehouse/${id}`)
+    //         const data: WarehouseData = await res.json()
+    //         setcurrentWarehouse(data)
+    //         console.log("Found warehouses: ", data)
+    //     }
+    //     catch(error){
+    //         console.log("Error fetching warehouses:", error);
+    //     }                    
+    // }
+
+    const getProduct = async(id: number) =>{
         try{
-            const res = await fetch(`http://localhost:5000/api/warehouse/${id}`)
+            const res = await fetch(`/api/product/${id}`)
             const data: WarehouseData = await res.json()
-            setWh(data)
+            // setcurrentWarehouse(data)
             console.log("Found warehouses: ", data)
         }
         catch(error){
             console.log("Error fetching warehouses:", error);
-        }                    
+        }    
+    }
+
+    const getInventory = async (id: number) => {
+        try{
+            const res = await fetch(`/api/warehouse/${id}/inventory`)
+            const data: InventoryData[] = await res.json()
+            setcurrentInventory(data)
+            console.log("Found warehouses: ", data)
+        }
+        catch(error){
+            console.log("Error fetching warehouses:", error);
+        }    
     }
 
 
     
     useEffect(() => {
-    getWarehouses();
-    // getWarehouse(wh_id);
+        getWarehouses()
+        for(const wh of warehouses ){
+            console.log(`Getting inventory from: ${wh.name}`)
+            getInventory(wh.id)
+            for(const inven of currentInventory){
+                // console.log(`Product: ${inven.}`)
+            }
+        }
     }, []);
 
 
     return (
         <Layout>
-            <h2>Products</h2>
-            <button onClick={() =>{
-                var value: number = wh_id + 1;
-                if(value > 3){
-                    value = 1;
-                }
-                setWhId(value);
-                getWarehouse(value);
-            }}>{wh_id}</button>
-            
-            {wh && (
             <div>
-                [{wh.id}]: {wh.name}
+
             </div>
-            )}
-
-            <h3>Warehouses</h3>
-            <ul>
-                {warehouses.map(warehouse => (
-                <li key={warehouse.id}>[{warehouse.id}]: {warehouse.name}</li>
-                ))}
-            </ul>
-
         </Layout>
     );
 }
