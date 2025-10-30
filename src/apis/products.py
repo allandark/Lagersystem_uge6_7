@@ -1,8 +1,8 @@
 from flask_restx import Namespace, Resource, fields, Model
 from flask import Flask, jsonify, request
 from flask_restx import Api, Resource
+from flask_jwt_extended import jwt_required
 from apis.auth import authorizations
-
 
 def create_api_product(db_manager):
     api: Namespace = Namespace("product", description="Product namespace", authorizations=authorizations)
@@ -55,7 +55,8 @@ def create_api_product(db_manager):
             products = db_manager.products.GetAll()
             return {"products": products}, 200
 
-        @api.doc('Update new product')
+        @jwt_required()
+        @api.doc('Update new product', security='jsonWebToken')
         @api.expect(update_product_model)
         def put(self):
             product_ID = api.payload['id']
@@ -68,7 +69,8 @@ def create_api_product(db_manager):
                 result = db_manager.products.UpdateProduct(product_ID, product_name, product_price)
             return jsonify({'New product': result})
 
-        @api.doc('Remove product')
+        @jwt_required()
+        @api.doc('Remove product', security='jsonWebToken')
         @api.expect(remove_product_model)
         def delete(self):
             ID = api.payload['id']
@@ -80,8 +82,8 @@ def create_api_product(db_manager):
             #result = db_manager.products.RemoveItem(ID)
             return jsonify({'Removed product': result})
 
-
-        @api.doc('New product')
+        @jwt_required()
+        @api.doc('New product', security='jsonWebToken')
         @api.expect(new_product_model)
         def post(self):
             product_id = api.payload['id']

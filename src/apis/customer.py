@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields, Model, reqparse
 from flask import Flask, jsonify, request
 from flask_restx import Api, Resource
+from flask_jwt_extended import jwt_required
 from apis.auth import authorizations
 
 
@@ -39,7 +40,8 @@ def create_api_customer(db_manager):
             result = db_manager.customers.GetAll()
             return result
 
-        @api.doc('Add a new customer')
+        @jwt_required()
+        @api.doc('Add a new customer', security='jsonWebToken')
         @api.expect(new_customer_model)
         def post(self):
             ID = api.payload['customerid']
@@ -55,7 +57,8 @@ def create_api_customer(db_manager):
                 result = db_manager.customers.Insert(name, email)
                 return result
 
-        @api.doc('Update customer info')
+        @jwt_required()
+        @api.doc('Update customer info', security='jsonWebToken')
         @api.expect(update_customer_model)
         def put(self):
             ID = api.payload['customerid']
@@ -72,7 +75,8 @@ def create_api_customer(db_manager):
                     result = db_manager.customers.Update(ID, name, email)
                 return result
             
-        @api.doc('Delete a customer')
+        @jwt_required()
+        @api.doc('Delete a customer', security='jsonWebToken')
         @api.expect(remove_customer_model)
         def delete(self):
             ID = api.payload['id']
