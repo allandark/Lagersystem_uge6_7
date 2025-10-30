@@ -26,7 +26,7 @@ def create_api_product(db_manager):
     class ProductGetById(Resource):
         @api.doc('Get product based on ID')
         def get(self, id):
-            products = db_manager.products.GetById(id)
+            products = db_manager.product.GetById(id)
             print(products)
             return {"products":products}, 200
         
@@ -35,7 +35,7 @@ def create_api_product(db_manager):
         @api.doc('Get product based on price')
         def get(self, price):
             newPrice = float (price)
-            products = db_manager.products.GetByPrice(price)
+            products = db_manager.product.GetByPrice(price)
             print(products)
             return {"products":products}, 200
         
@@ -44,7 +44,7 @@ def create_api_product(db_manager):
         @api.doc('Get product based on price')
         def get(self, range):
             low_price, high_price = map(float, range.split('-'))
-            products = db_manager.products.GetPriceByInterval(low_price, high_price)
+            products = db_manager.product.GetPriceByInterval(low_price, high_price)
             print(products)
             return {"products":products}, 200
             
@@ -52,7 +52,7 @@ def create_api_product(db_manager):
     class Product(Resource):
         @api.doc("Get all products")
         def get(self):
-            products = db_manager.products.GetAll()
+            products = db_manager.product.GetAll()
             return {"products": products}, 200
 
         @jwt_required()
@@ -62,11 +62,11 @@ def create_api_product(db_manager):
             product_ID = api.payload['id']
             product_name = api.payload['name']
             product_price = api.payload['price']
-            result = db_manager.products.GetById(product_ID)
+            result = db_manager.product.GetById(product_ID)
             if result == []:
                 return jsonify({"message": "Product not found"})
             else:
-                result = db_manager.products.UpdateProduct(product_ID, product_name, product_price)
+                result = db_manager.product.UpdateProduct(product_ID, product_name, product_price)
             return jsonify({'New product': result})
 
         @jwt_required()
@@ -74,12 +74,12 @@ def create_api_product(db_manager):
         @api.expect(remove_product_model)
         def delete(self):
             ID = api.payload['id']
-            result = db_manager.products.GetById(ID)
+            result = db_manager.product.GetById(ID)
             if result == []:
                 return jsonify({"message": "Product doesn't exist"})
             else:
-                db_manager.products.UpdateItemStatus(ID, "Inactive")
-            #result = db_manager.products.RemoveItem(ID)
+                db_manager.product.UpdateItemStatus(ID, "Inactive")
+            #result = db_manager.product.RemoveItem(ID)
             return jsonify({'Removed product': result})
 
         @jwt_required()
@@ -89,10 +89,10 @@ def create_api_product(db_manager):
             product_id = api.payload['id']
             product_name = api.payload['name']
             product_price = api.payload['price']
-            #if(len(db_manager.products.GetById(product_id)) > 0):
+            #if(len(db_manager.product.GetById(product_id)) > 0):
              #   return jsonify({"message": f"Product {product_id} already exists!"})
             #else:
-            result = db_manager.products.insertproduct(product_name, product_price)
+            result = db_manager.product.insertproduct(product_name, product_price)
             return jsonify({'Added product': result})
     
     return api
