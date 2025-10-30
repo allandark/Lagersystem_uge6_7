@@ -27,8 +27,8 @@ def create_api_product(db_manager):
         @api.doc('Get product based on ID')
         def get(self, id):
             products = db_manager.product.GetById(id)
-            print(products)
-            return {"products":products}, 200
+            # print(products)
+            return products, 200
         
     @api.route("price/<price>")
     class ProductGetByPrice(Resource):

@@ -27,7 +27,7 @@ class ProductModel:
                 cursor.execute(f"SELECT * FROM produkts where produktID = %s ", (id,))
                 if(cursor.with_rows==True):
                     myresult = (cursor.fetchall())
-                    return myresult
+                    return self._totuple(myresult[0])
                 else:
                     myresult = cursor.fetchwarnings()
                     return False
@@ -80,7 +80,7 @@ class ProductModel:
                 # else:
                 #     result = cursor.fetchwarnings()
                 #     return result
-            self.db.commit()
+            conn.commit()
             product = {
                 "id": n_id,
                 "name":  name,
@@ -152,8 +152,8 @@ class ProductModel:
         
     def _totuple(self, myresult):
         result = {
-                "id": myresult[0][0],
-                "price": myresult[0][1],
-                "name": myresult[0][2]
+                "id": myresult[0],
+                "price": myresult[1],
+                "name": myresult[2]
             }
         return result
