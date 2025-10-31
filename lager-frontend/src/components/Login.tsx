@@ -1,6 +1,7 @@
 import { useState, useEffect  } from 'react';
 import { setToken, getToken } from '../authService';
 import { useNavigate } from 'react-router-dom';
+import "./Login.css"
 
 export default function LoginForm() {
   const [name, setName] = useState("");
@@ -48,16 +49,14 @@ export default function LoginForm() {
 
 
   
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    // e.preventDefault();e: React.FormEvent
     sendLogin();
     
   };
 
  
   return (
-
-
       <div>
         <form onSubmit={handleSubmit}>
         <label>Username:
@@ -75,7 +74,7 @@ export default function LoginForm() {
           <input
             name="password"
             autoComplete="off"
-            type="text"
+            type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
           />

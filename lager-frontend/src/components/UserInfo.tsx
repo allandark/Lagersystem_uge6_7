@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { getToken, clearToken } from '../authService';
 import type { AdminUser } from '../types/Types';
-
+import { useNavigate } from 'react-router-dom';
 
 export default function UserInfo() {
     const [user, setUser] = useState<AdminUser|null>(null);
     const API_URL = import.meta.env.VITE_API_URL;
     const token = getToken()    
+    const navigate = useNavigate();
     const getUser = async () => {
         
         if (!token) {
             console.warn("No token found. Redirecting to login...");
             clearToken();    
-            window.location.href = "/admin";        
+            navigate("/admin");          
             return;
         }
 
@@ -30,7 +31,7 @@ export default function UserInfo() {
                 // Token is invalid or expired
                 console.warn("Token expired or invalid. Clearing and redirecting...");
                 clearToken();
-                return;
+                navigate("/admin");  
             }
             throw new Error(`Request failed with status ${res.status}`);
         }
