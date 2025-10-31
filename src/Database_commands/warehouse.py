@@ -79,7 +79,7 @@ class WarehouseModel:
             with conn.cursor() as cursor:
                 cursor.execute(query, (navn, id))
 
-            self.db.commit()
+            conn.commit()
             wh = {
                 "id": id,
                 "name": navn

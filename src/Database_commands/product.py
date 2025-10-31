@@ -13,8 +13,10 @@ class ProductModel:
                 cursor.execute("SELECT * FROM produkts")
 
                 myresult = cursor.fetchall()
-        
-                return myresult
+                results = []
+                for r in myresult:
+                    results.append(self._totuple(r))
+                return results
         except Exception as e:
             print("Error getting product:", e)
             return False
@@ -120,16 +122,21 @@ class ProductModel:
             print("Error removing product by ID:", e)
             return False
         
-    def UpdateProduct(self, id, navn, pris):
+    def UpdateProduct(self, id, navn, pris, status):
 
         try:
             conn = self.db.get_connection()
             with conn.cursor(dictionary=True) as cursor:
-                command = f"UPDATE produkts SET navn = '{navn}', pris = {pris} WHERE produktID = {id}"
+                command = f"UPDATE produkts SET navn = '{navn}', pris = {pris}, status= '{status}' WHERE produktID = {id}"
                 cursor.execute(command)
                 conn.commit()
-            myresult = self.GetById(id)
-            return self._totuple(myresult)
+            
+            return {
+                "id": id,
+                "name": navn,
+                "price": pris,
+                "status": status
+            }
         except Exception as e:
             print("Error updating product:", e)
             return False
@@ -154,6 +161,7 @@ class ProductModel:
         result = {
                 "id": myresult[0],
                 "price": myresult[1],
-                "name": myresult[2]
+                "name": myresult[2],
+                "status": myresult[3]
             }
         return result
