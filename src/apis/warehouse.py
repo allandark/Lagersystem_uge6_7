@@ -101,7 +101,7 @@ def create_api_warehouse(db_manager):
             description='Get inventory of warehouse with ID')
         @api.marshal_list_with(warehouse_item_model)
         def get(self,id):
-            wh_entries = db_manager.warehosue_inventory.GetByWarehouseID(id)            
+            wh_entries = db_manager.warehouse_inventory.GetByWarehouseID(id)            
             if not wh_entries:
                 return {"error": "warehouse not found"}, 404
 

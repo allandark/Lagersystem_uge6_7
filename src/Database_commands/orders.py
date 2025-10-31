@@ -6,7 +6,8 @@ class OrdersModel:
     
     def GetAll(self):
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute("SELECT * FROM orders")
 
                 myresult = cursor.fetchall()
@@ -23,13 +24,14 @@ class OrdersModel:
     def Insert(self, produktID,invoicenummer,customerid,status,mængde,lagerID):
         
         try:
-            with self.db.cursor(dictionary=True) as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary=True) as cursor:
                 query = "INSERT INTO orders (produktID, invoicenummer,customerid,status,mængde,lagerID) VALUES (%s, %s, %s,%s, %s, %s)"
 
                 cursor.execute(query, (produktID, invoicenummer, customerid,status,mængde,lagerID))
                 result = cursor.fetchall()
                 #n_id = cursor.lastrowid
-            self.db.commit()
+            conn.commit()
             #result = self.GetByProductID(produktID)
             return True
         except Exception as e:
@@ -38,7 +40,8 @@ class OrdersModel:
     def GetByID(self, OrderID):
         
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute(f"SELECT * FROM orders where OrderID = %s ", (OrderID,))
 
                 myresult = cursor.fetchall()
@@ -51,7 +54,8 @@ class OrdersModel:
     def GetByProductID(self, produktID):
         
         try:
-            with self.db.cursor(dictionary=True) as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary=True) as cursor:
                 cursor.execute(f"SELECT * FROM orders where produktID = %s ", (produktID,))
 
                 myresult = cursor.fetchall()
@@ -65,9 +69,10 @@ class OrdersModel:
     def GetByCustomerID(self, customerid):
         
         try:
-            self.db.execute(f"SELECT * FROM orders where customerid = %s ", (customerid,))
+            conn = self.db.get_connection()
+            conn.execute(f"SELECT * FROM orders where customerid = %s ", (customerid,))
 
-            myresult = self.db.fetchall()
+            myresult = conn.fetchall()
         
             return myresult
         except Exception as e:
@@ -77,9 +82,10 @@ class OrdersModel:
     def GetByWarehouseID(self, lagerID):
         
         try:
-            self.db.execute(f"SELECT * FROM orders where lagerID = %s ", (lagerID,))
+            conn = self.db.get_connection()
+            conn.execute(f"SELECT * FROM orders where lagerID = %s ", (lagerID,))
 
-            myresult = self.db.fetchall()
+            myresult = conn.fetchall()
         
             return myresult
         except Exception as e:
@@ -90,9 +96,10 @@ class OrdersModel:
     def GetbyStatus(self, status):
         
         try:
-            self.db.execute(f"SELECT * FROM orders where status = %s ", (status,))
+            conn = self.db.get_connection()
+            conn.execute(f"SELECT * FROM orders where status = %s ", (status,))
 
-            myresult = self.db.fetchall()
+            myresult = conn.fetchall()
         
             return myresult
         except Exception as e:
@@ -103,9 +110,10 @@ class OrdersModel:
     def GetByInvoiceNumber(self, invoicenummer):
         
         try:
-            self.db.execute(f"SELECT * FROM orders where invoicenummer = %s ", (invoicenummer,))
+            conn = self.db.get_connection()
+            conn.execute(f"SELECT * FROM orders where invoicenummer = %s ", (invoicenummer,))
 
-            myresult = self.db.fetchall()
+            myresult = conn.fetchall()
         
             return myresult
         except Exception as e:
@@ -115,11 +123,12 @@ class OrdersModel:
     def UpdateOrder(self, orderID, produktID,invoicenummer,customerid,status,mængde,lagerID):
 
         try:
-            with self.db.cursor(dictionary = True) as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary = True) as cursor:
                 query = f"UPDATE orders SET produktID = {produktID}, invoicenummer = {invoicenummer}, customerid = {customerid}, status = '{status}', mængde = {mængde}, lagerID = {lagerID} WHERE OrderID = {orderID}"
                 cursor.execute(query)
                 result = cursor.fetchall()
-            self.db.commit()
+            conn.commit()
             return result
         except Exception as e:
             print("Error updating order:", e)
@@ -128,11 +137,12 @@ class OrdersModel:
     def UpdateStatus(self, OrderID,newStatus):
         
         try:
-            with self.db.cursor(dictionary = True) as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary = True) as cursor:
                 query = "UPDATE orders SET status = %s WHERE OrderID = %s"
 
                 cursor.execute(query, (newStatus, OrderID))
-            self.db.commit()
+            conn.commit()
         
             return self.GetByID(OrderID)
         except Exception as e:
@@ -142,7 +152,8 @@ class OrdersModel:
     def OrderCustomerView(self, customerid):
         
         try:
-            self.db.execute(f"SELECT"
+            conn = self.db.get_connection()
+            conn.execute(f"SELECT"
                      f" orders.invoicenummer,"
                      f" produkts.navn,"
                      f" produkts.pris, "
@@ -153,7 +164,7 @@ class OrdersModel:
                      f" join customers on orders.customerid = customers.customerID"
                      f" where orders.customerid = %s ", (customerid,))
 
-            myresult = self.db.fetchall()
+            myresult = conn.fetchall()
         
             return myresult
         except Exception as e:

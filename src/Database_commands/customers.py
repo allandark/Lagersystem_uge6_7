@@ -9,7 +9,8 @@ class CustomersModel:
     def GetAll(self):
         
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute("SELECT * FROM customers")
 
                 myresult = cursor.fetchall()
@@ -25,7 +26,8 @@ class CustomersModel:
     def GetById(self, id):
 
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute(f"SELECT * FROM customers where customerid = %s ", (id,))
                 myresult = cursor.fetchall()    
                 if myresult == []:
@@ -40,7 +42,8 @@ class CustomersModel:
     def GetByEmail(self, email):
 
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 cursor.execute(f"SELECT * FROM customers where email = %s ", (email,))
                 myresult = cursor.fetchall()
                 if myresult == []:
@@ -56,12 +59,13 @@ class CustomersModel:
 
         try:
             n_id = -1
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 query = "INSERT INTO customers (navn, Email) VALUES (%s, %s)"
 
                 cursor.execute(query, (name, email))
                 n_id = cursor.lastrowid
-            self.db.commit()
+            conn.commit()
             customer = {
                 "id": n_id,
                 "name": name,
@@ -74,14 +78,15 @@ class CustomersModel:
 
     def Update(self, customerid, name, email):
         try:
+            conn = self.db.get_connection()
             query = """
                             UPDATE customers
                             SET navn = %s, Email = %s
                             WHERE customerid = %s
                         """
-            with self.db.cursor() as cursor:
+            with conn.cursor() as cursor:
                 cursor.execute(query, (name, email, customerid))
-            self.db.commit()
+            conn.commit()
             customer = {
                 "id": customerid,
                 "name": name,
@@ -94,10 +99,11 @@ class CustomersModel:
 
     def Delete(self, id):
         try:
-            with self.db.cursor() as cursor:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
                 query = "DELETE FROM customers WHERE customerid = %s"
                 cursor.execute(query, (id,))
-            self.db.commit()
+            conn.commit()
             return True
         except Exception as e:
             print(f"Error deleting customers: {e}")

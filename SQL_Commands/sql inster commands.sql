@@ -14,7 +14,7 @@ insert into Produkts(pris, navn, status)
 value(5.44,"Rum - Spiced, Captain Morgan", "Active");
 
 insert into Produkts(pris, navn, status)
-value(5.43,"Cheese Cloth No 100", "Active");
+value(5.43,"Cheese Cloth No 100", "Inactive");
 
 insert into lagers(navn)
 value("odense");
@@ -52,8 +52,6 @@ value(3,3,66);
 insert into lager_manger(lagerID,produktID,antal)
 value(3,4,10);
 
-insert into admin(navn,adminpassword)
-value("admin","adminpassword");
 
 insert into customers(navn,email)
 value("luke","luke@test.com");

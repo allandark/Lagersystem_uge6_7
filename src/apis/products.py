@@ -12,7 +12,8 @@ def create_api_product(db_manager):
     new_product_model: Model = api.model('NewProductModel', {
             'id': fields.Integer(required=True, description = "Product ID"),
             'name': fields.String(required=True, description='Name of product'),
-            'price': fields.Float(required=True, description="Poduct price")})
+            'price': fields.Float(required=True, description="Poduct price"),
+            'status': fields.String})
 
     remove_product_model: Model = api.model('RemoveProductModel', {
             'id': fields.Integer(required=True, description='Name of product')})
@@ -20,15 +21,16 @@ def create_api_product(db_manager):
     update_product_model: Model = api.model('UpdateProductModel', {
             'id': fields.Integer(required=True, description = "Product ID"),
             'name': fields.String(required=True, description='Name of product'),
-            'price': fields.Float(required=True, description="Poduct price")})
+            'price': fields.Float(required=True, description="Poduct price"),
+            'status': fields.String})
 
     @api.route("/id<int:id>")
     class ProductGetById(Resource):
         @api.doc('Get product based on ID')
         def get(self, id):
             products = db_manager.product.GetById(id)
-            print(products)
-            return {"products":products}, 200
+            # print(products)
+            return products, 200
         
     @api.route("price/<price>")
     class ProductGetByPrice(Resource):
@@ -53,7 +55,7 @@ def create_api_product(db_manager):
         @api.doc("Get all products")
         def get(self):
             products = db_manager.product.GetAll()
-            return {"products": products}, 200
+            return products, 200
 
         @jwt_required()
         @api.doc('Update new product', security='jsonWebToken')
@@ -62,12 +64,16 @@ def create_api_product(db_manager):
             product_ID = api.payload['id']
             product_name = api.payload['name']
             product_price = api.payload['price']
+            product_status = api.payload['status']
             result = db_manager.product.GetById(product_ID)
-            if result == []:
-                return jsonify({"message": "Product not found"})
-            else:
-                result = db_manager.product.UpdateProduct(product_ID, product_name, product_price)
-            return jsonify({'New product': result})
+            if result is False:
+                return {"error": "not found"}, 404
+            result = db_manager.product.UpdateProduct(
+                product_ID, 
+                product_name, 
+                product_price,
+                product_status)
+            return  result, 201
 
         @jwt_required()
         @api.doc('Remove product', security='jsonWebToken')

@@ -8,33 +8,35 @@ from database_commands.warehouse import WarehouseModel
 
 class DatabaseManager:
     def __init__(self, host, user, password, dbname):
-        
+        self.host = host
+        self.user = user
+        self.password = password
+        self.dbname = dbname
+
+        self.mydb = None
+
+        self.product = ProductModel(self)
+        self.orders = OrdersModel(self)
+        self.admin = AdminModel(self)
+        self.customers = CustomersModel(self)
+        self.warehouse = WarehouseModel(self)
+        self.warehouse_inventory = WarehuseInventoryModel(self)
         try:
+            self.get_connection()
+
+        except Exception as e:
+            print(f"Could not connect to database: {dbname}")
+ 
+
+    def get_connection(self):
+        if not self.mydb or not self.mydb.is_connected():
             self.mydb = mysql.connector.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=dbname
+                host=self.host,
+                user=self.user,
+                password=self.password,
+                database=self.dbname
             )
-            
-        
-            self.product = ProductModel(self.mydb)
-            self.orders = OrdersModel(self.mydb)
-            self.admin = AdminModel(self.mydb)
-            self.customers = CustomersModel(self.mydb)
-            self.warehouse = WarehouseModel(self.mydb)
-            self.warehouse_inventory = WarehuseInventoryModel(self.mydb)
-        
-        finally:
-            if 'connection' in locals() and self.mydb.is_connected():
-                self.mydb.close()
-        
-    def is_connected(self):
-        
-        if self.mydb.is_connected():
-            return True
-        else:
-            return False
+        return self.mydb
 
         
     

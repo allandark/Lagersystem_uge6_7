@@ -51,7 +51,8 @@ def create_api_auth(db_manager):
 
             if not status:
                 return {"error": "Invalid user or password"}, 401
-            return {"access_token": create_access_token(user["name"])}
+
+            return {"access_token": create_access_token(identity=str(user["id"]))}
 
     @api.route('/register')
     class Register(Resource):
@@ -80,11 +81,10 @@ def create_api_auth(db_manager):
         @api.expect(change_password_model)
         # @api.marshal_with( code=200)
         def post(self):
-            user_id = get_jwt_identity()
-            users = db_manager.admin.GetAll()
-            user = next((u for u in users if u["name"] == user_id), None)
-            
-            if user is None:
+            user_id = int(get_jwt_identity())
+            user = db_manager.admin.GetById(user_id)
+        
+            if user is False:
                 return {"error": "User does not exist"}, 404
 
             if not check_password_hash(user["password_hash"],api.payload["old_password"]):
@@ -111,11 +111,10 @@ def create_api_auth(db_manager):
         @api.expect(change_username_model)
         # @api.marshal_with(code=200)
         def post(self):
-            user_id = get_jwt_identity()
-            users = db_manager.admin.GetAll()
-            user = next((u for u in users if u["name"] == user_id), None)
+            user_id = int(get_jwt_identity())
+            user = db_manager.admin.GetById(user_id)
 
-            if not user:
+            if user is False:
                 return {"error": "User does not exist"}, 404
             
            
@@ -126,7 +125,43 @@ def create_api_auth(db_manager):
             
             return user, 200
 
+    @api.route('/profile/me')
+    class ProfileMe(Resource):
+        ''' Profile me
+        '''
+        @jwt_required() 
+        @api.doc('Returns the current user from JWT',security="jsonWebToken")
+        @api.marshal_with(user_model, code=200)
+        def get(self):
+            user_id = int(get_jwt_identity())
+            user = db_manager.admin.GetById(user_id)
+            if user is False:
+                return {"error": "user not found"}, 404
+            return {"id": user["id"], "name": user["name"]}, 200
 
+    @api.route('/profile/')
+    class ProfileAll(Resource):
+        ''' Get all admin users
+        '''
+        @jwt_required() 
+        @api.doc('Returns all the admin users',security="jsonWebToken")
+        @api.marshal_list_with(user_model, code=200)
+        def get(self):
+            users = db_manager.admin.GetAll()
+            return users, 200
+
+    @api.route('/profile/<int:id>')
+    class ProfileID(Resource):
+        ''' Get admin user by id
+        '''
+        @jwt_required() 
+        @api.doc('Returns the admin user by id',security="jsonWebToken")
+        @api.marshal_with(user_model, code=200)
+        def get(self, id):
+            user = db_manager.admin.GetById(id)
+            if user is False:
+                return {"error": "user not found"}, 404
+            return user, 200
 
     return api
 
