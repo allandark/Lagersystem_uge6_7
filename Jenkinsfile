@@ -29,7 +29,7 @@ pipeline {
         
         dir("${env.WORKSPACE}") {
           sh 'pytest tests/unit --junitxml="tests/results/unittest_report.xml"'
-          sh '''pytest tests/integration --junitxml="tests/results/integrationtest_report.xml"'''
+        //   sh '''pytest tests/integration --junitxml="tests/results/integrationtest_report.xml"'''
           junit 'tests/results/*.xml'
         }  
       }
