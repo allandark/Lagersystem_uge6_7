@@ -1,0 +1,31 @@
+[] Docker
+    [x] Dockerfile
+    [] Docker compose
+    [] Environment vars/config
+    [] *Kubernetes
+[] Jenkins pipeline
+    [x] Jenkinsfile
+    [] Run on commit
+    [] *Deploy to cloud on success
+
+[] Unit test:
+    [] warehouse api
+    [] products api
+    [] auth api
+    [] customer api
+    [] orders api
+    [] *warehouse db interface
+    [] *products db interface
+    [] *auth db interface
+    [] *customer db interface
+    [] *orders db interface
+
+[] Integration test:
+    [] Request basket for endpoints
+    [] Database interaction
+    [] Full pipeline
+
+[] Frontend:
+    [] Login/page redirect, functionality
+    [] Orders
+    [] Product Add, Update, Delete
