@@ -53,6 +53,16 @@ npm run build
 python src/app.py
 ```
 
+### Docker
+
+```
+docker build -t lagersystem:latest .
+```
+
+```
+docker run -v "$(pwd)":/lagersystem --network bridge -p 5000:5000 --name lagersystem-container lagersystem
+```
+
 ### Tests
 The project uses the package `pytest` to perform unit- and integration-tests.
 * Open terminal (powershell/bash)
@@ -99,3 +109,4 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 Inspiration, code snippets, etc.
 * https://www.geeksforgeeks.org/python/how-to-run-a-flask-application/
 * https://github.com/JamesWebbTelescope/uge-3
+

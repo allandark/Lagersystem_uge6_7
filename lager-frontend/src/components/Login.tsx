@@ -1,5 +1,5 @@
 import { useState, useEffect  } from 'react';
-import { setToken, getToken } from '../authService';
+import { setToken, getToken, clearToken } from '../authService';
 import { useNavigate } from 'react-router-dom';
 import "./Login.css"
 
@@ -23,6 +23,7 @@ export default function LoginForm() {
             headers: {
               "Content-Type": "application/json",
             },
+            credentials: 'include',
             body: JSON.stringify(loginModel),
           });
           console.log(`Res: ${res}`)
@@ -30,11 +31,12 @@ export default function LoginForm() {
           const data = await res.json();          
           setToken(data.access_token);
           setTokenState(data.access_token);
-          navigate("/admin"); 
+           
           console.log("Login successfull")
           
         } catch (error) {
-          console.error("Login error:", error);
+          console.error("Login error:", error); 
+          clearToken();
         }
       };
 
@@ -52,6 +54,7 @@ export default function LoginForm() {
   const handleSubmit = () => {
     // e.preventDefault();e: React.FormEvent
     sendLogin();
+    navigate("/admin");
     
   };
 

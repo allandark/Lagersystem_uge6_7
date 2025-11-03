@@ -7,11 +7,7 @@ from core.config import Config, ReadConfigFile
 from core.utils import create_admin_user
 from flask_cors import CORS
 import os
-
-
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-]
+from waitress import serve
 
 
 def get_origin(origin):
@@ -29,13 +25,16 @@ def create_app():
         password= config.db_password,
         dbname= config.db_name)
     
+    if not dbManger.is_connected:
+        print("Could not connect to database, quiting program")
+        return None
     
     app = Flask(
         __name__, 
-        static_folder="..\\lager-frontend\\dist",
+        static_folder="../lager-frontend/dist",
         static_url_path="")
-    app.wsgi_app = ProxyFix(app.wsgi_app)
-    CORS(app, origins=["http://localhost:5173"], supports_credentials=True) 
+    # app.wsgi_app = ProxyFix(app.wsgi_app)
+    
 
     app.config["JWT_SECRET_KEY"] = config.jwt_token
     app.config["DEBUG"] = config.debug
@@ -43,13 +42,18 @@ def create_app():
     app.config["API_HOST"] = config.api_host
     app.config["API_PORT"] = config.api_port
 
-
+    CORS(app, origins=
+        [f"http://{config.api_host}:{config.api_port}", 
+        f"http://localhost:{config.api_port}"], supports_credentials=True) 
+    # CORS(app)
+ 
     # Create the endpoint to serve the frontpage
     @app.route("/")
     @app.route("/products")
     @app.route("/customer")
     @app.route("/admin")
     def serve_react():  
+        
         return send_from_directory(app.static_folder, 'index.html')
 
 
@@ -77,9 +81,17 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
+    if app is not None:
+        if app.config["DEBUG"]:
+            app.run(
+                host=app.config["API_HOST"],
+                port=app.config["API_PORT"],
+                debug=True
+            )
+        else:
+            serve(
+                app, 
+                host=app.config["API_HOST"],
+                port=app.config["API_PORT"])
 
-    app.run(
-        host=app.config["API_HOST"],
-        port=app.config["API_PORT"],
-        debug=app.config["DEBUG"])
     

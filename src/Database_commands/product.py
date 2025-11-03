@@ -10,7 +10,7 @@ class ProductModel:
         try:
             conn = self.db.get_connection()
             with conn.cursor() as cursor:
-                cursor.execute("SELECT * FROM produkts")
+                cursor.execute("SELECT * FROM Produkts")
 
                 myresult = cursor.fetchall()
                 results = []
@@ -26,7 +26,7 @@ class ProductModel:
         try:
             conn = self.db.get_connection()
             with conn.cursor() as cursor:
-                cursor.execute(f"SELECT * FROM produkts where produktID = %s ", (id,))
+                cursor.execute(f"SELECT * FROM Produkts where produktID = %s ", (id,))
                 if(cursor.with_rows==True):
                     myresult = (cursor.fetchall())
                     return self._totuple(myresult[0])
@@ -43,7 +43,7 @@ class ProductModel:
         try:
             conn = self.db.get_connection()
             with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(f"SELECT * FROM produkts where pris = %s ", (price,))
+                cursor.execute(f"SELECT * FROM Produkts where pris = %s ", (price,))
 
                 myresult = cursor.fetchall()
         
@@ -57,7 +57,7 @@ class ProductModel:
         try:
             conn = self.db.get_connection()
             with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(f"SELECT * FROM produkts WHERE pris BETWEEN %s AND %s" , (lov_price,high_price))
+                cursor.execute(f"SELECT * FROM Produkts WHERE pris BETWEEN %s AND %s" , (lov_price,high_price))
 
                 myresult = cursor.fetchall()
         
@@ -72,7 +72,7 @@ class ProductModel:
             conn = self.db.get_connection()
             n_id = -1
             with conn.cursor(dictionary=True) as cursor:
-                query = f"INSERT INTO produkts (navn, pris) VALUES ('{name}', {price})"
+                query = f"INSERT INTO Produkts (navn, pris) VALUES ('{name}', {price})"
 
                 cursor.execute(query)
                 n_id = cursor.lastrowid
@@ -98,7 +98,7 @@ class ProductModel:
         try:
             conn = self.db.get_connection()
             with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(f"SELECT * FROM produkts where navn = %s ", (name,))
+                cursor.execute(f"SELECT * FROM Produkts where navn = %s ", (name,))
 
                 myresult = cursor.fetchall()
             
@@ -112,7 +112,7 @@ class ProductModel:
         try:
             conn = self.db.get_connection()
             with conn.cursor(dictionary=True) as cursor:
-                cursor.execute(f"UPDATE produkts SET status = '{status}' WHERE produktID = {id}")
+                cursor.execute(f"UPDATE Produkts SET status = '{status}' WHERE produktID = {id}")
                 conn.commit()
                 myresult = self.GetById(id)
 
@@ -127,7 +127,7 @@ class ProductModel:
         try:
             conn = self.db.get_connection()
             with conn.cursor(dictionary=True) as cursor:
-                command = f"UPDATE produkts SET navn = '{navn}', pris = {pris}, status= '{status}' WHERE produktID = {id}"
+                command = f"UPDATE Produkts SET navn = '{navn}', pris = {pris}, status= '{status}' WHERE produktID = {id}"
                 cursor.execute(command)
                 conn.commit()
             
@@ -145,7 +145,7 @@ class ProductModel:
         try:
             conn = self.db.get_connection()
             with conn.cursor(dictionary = True) as cursor:
-                cursor.execute(f"SELECT exists(select 1 from produkts where produktID = %s)AS id_exists ", (id,))
+                cursor.execute(f"SELECT exists(select 1 from Produkts where produktID = %s)AS id_exists ", (id,))
 
                 myresult = cursor.fetchall()
 
