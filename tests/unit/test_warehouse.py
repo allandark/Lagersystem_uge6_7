@@ -3,6 +3,7 @@ from unittest.mock import patch
 from flask_restx import Namespace, Resource, fields, Model
 from flask_jwt_extended import create_access_token
 
+import src
 from src.app import create_app
 from src.apis import api
 
