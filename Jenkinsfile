@@ -30,7 +30,9 @@ pipeline {
           sh 'docker --version'
           sh 'jq --version'
           sh 'git --version'
-                  
+          
+          sh 'pwd'
+          sh 'ls -la'
           sh  'bash ./scripts/update_config.sh'                   
           
           echo "Version: $VERSION"          
