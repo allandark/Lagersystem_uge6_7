@@ -29,12 +29,11 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'                               
-            script {
-                def version = sh(script: "jq -r '.version' ./config.json", returnStdout: true).trim()
-                env.VERSION = version
+            script {                
+                env.VERSION = sh(script: "jq -r '.version' ./config.json", returnStdout: true).trim()
             }
 
-          echo "Version: $VERSION"     
+          echo "Version: $env.VERSION"     
           sh "docker build -t lagersystem:$VERSION ."     
           
 
