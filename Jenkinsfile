@@ -1,10 +1,12 @@
 pipeline {
   
     agent {
+
         docker {
-            image 'docker:dind'
-             args '-u root'
+            image 'docker:latest'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
+
     }
 
     environment{      
@@ -28,6 +30,7 @@ pipeline {
           echo 'dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW'
           echo 'portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW'
           sh 'ls -la'
+          sh 'docker ps'
           // sh '''
           // echo "$DOCKER_HUB_PSW" | docker login https://registry-1.docker.io/v2/ --username="$DOCKER_HUB_USR" --password-stdin
           // docker build -t lagersystem:latest .
@@ -47,7 +50,7 @@ pipeline {
     }
     stage('Deploy'){
       steps {
-        echo '--- Deploying docker container to portainer'
+        echo '--- Deploying docker container to portainer ---'
         // sh '''
         // docker tag lagersystem $DOCKER_HUB_USER/lagersystem
         // docker push $DOCKER_HUB_USER/lagersystem
@@ -60,7 +63,7 @@ pipeline {
 
   post {
     always {
-      echo 'Archiving artifacts'
+      echo '--- Archiving artifacts ---'
       archiveArtifacts artifacts: 'tests/results/*.xml', fingerprint: true
       
       echo 'Cleaning up test cache...'
