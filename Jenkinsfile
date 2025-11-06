@@ -33,12 +33,15 @@ pipeline {
  
           // Read and parse the file line by line
           try {
-            def envVars = readFile('globals.env').split('\n')
+            def envFilePath = "${env.WORKSPACE}/globals.env"
+            echo "globals.env path: ${envFilePath}"
+            def envVars = readFile(envFilePath).split('\n')
             envVars.each { line ->
                 def parts = line.trim().split('=')
                 if (parts.length == 2) {
                     env[parts[0].replaceAll('export ', '')] = parts[1].replaceAll('"', '')
                 }
+                sh 'printenv'
             }
           } catch(Exception e){
             error "globals.env not found or unreadable: ${e.message}"
