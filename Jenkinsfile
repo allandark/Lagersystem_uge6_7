@@ -32,7 +32,7 @@ pipeline {
               chmod +x ./scripts/*.sh
               ./scripts/update_config.sh
               source ~/globals.env
-              echo "Version: $VERSION"
+              echo \"Version: $VERSION\"
               docker build -t lagersystem:$VERSION .
           """
       }
