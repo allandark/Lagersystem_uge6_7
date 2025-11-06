@@ -48,10 +48,22 @@ npm run build
 * Run the file by pressing F5 on your keyboard.
 * In the terminal, if everything works, you will see a line saying "Running on http://###.#.#.#:5000". Copy this address into your preferred web browser and write "/docs" at the end, so it looks like this: http://###.#.#.#:5000/docs
 * Press Enter to go to the website.
-* Right now, the website is under development. Because of this, you will see two namespaces: auth and product.
+* Right now, the website is under development. Because of this, you will see five namespaces: auth, customer, warehouse, product and order.
 ```
 python src/app.py
 ```
+
+## Docker container
+
+* When you have downloaded this project:
+* * Navigate to the project folder:
+    ´´´
+    cd path/to/folder/Lagersystem_Docker_uge8
+    ´´´
+* * Run the following command:
+  ´´´
+  docker build
+  ```
 
 ### Tests
 The project uses the package `pytest` to perform unit- and integration-tests.
