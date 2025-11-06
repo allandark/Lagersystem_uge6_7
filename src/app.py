@@ -6,6 +6,7 @@ from database_commands.product import ProductModel
 from core.config import Config, ReadConfigFile
 from core.utils import create_admin_user
 from flask_cors import CORS
+import tests
 import os
 
 
