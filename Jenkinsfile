@@ -26,10 +26,10 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'
-          echo 'sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW, token: $JWT_TOKEN'
-          echo 'dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW'
-          echo 'portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW'
-          sh 'ls -la'
+          // echo 'sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW, token: $JWT_TOKEN'
+          // echo 'dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW'
+          // echo 'portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW'
+          // sh 'ls -la'
           sh 'docker ps'
           // sh '''
           // echo "$DOCKER_HUB_PSW" | docker login https://registry-1.docker.io/v2/ --username="$DOCKER_HUB_USR" --password-stdin
@@ -64,7 +64,7 @@ pipeline {
   post {
     always {
       echo '--- Archiving artifacts ---'
-      archiveArtifacts artifacts: 'tests/results/*.xml', fingerprint: true
+      // archiveArtifacts artifacts: 'tests/results/*.xml', fingerprint: true
       
       echo 'Cleaning up test cache...'
       sh 'rm -rf .pytest_cache'
