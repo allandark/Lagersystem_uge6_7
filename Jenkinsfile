@@ -3,7 +3,7 @@ pipeline {
     agent {
 
         docker {
-            image 'ubuntu:latest'
+            image 'specialistdj/jenkins-agent:latest'
             args '-v /var/run/docker.sock:/var/run/docker.sock --entrypoint=""'
         }
 
@@ -25,20 +25,22 @@ pipeline {
     stage('Build') {
 
       steps {
-          echo '--- Building docker image ---'   
-          sh "ls -la"       
-          sh  """
-          bash ./scripts/update_config.sh
-          """
+          echo '--- Building docker image ---' 
+          
+          sh 'docker --version'
+          sh 'jq --version'
+          sh 'git --version'
+                  
+          sh  'bash ./scripts/update_config.sh'                   
           
           echo "Version: $VERSION"          
           
           withCredentials([usernamePassword(credentialsId: 'docker_account', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                              sh '''
-                                  echo "$DOCKER_PASS" | docker login https://registry-1.docker.io/v2/ \
-                                  --username="$DOCKER_USER" --password-stdin
-                                  docker build -t lagersystem:$VERSION .
-                              '''
+            sh '''
+                echo "$DOCKER_PASS" | docker login https://registry-1.docker.io/v2/ \
+                --username="$DOCKER_USER" --password-stdin
+                docker build -t lagersystem:$VERSION .
+            '''
           }
 
       }
