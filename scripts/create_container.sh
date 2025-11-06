@@ -28,47 +28,36 @@ fi
 response=$(curl -s -w "HTTPSTATUS:%{http_code}" -X POST "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/create?name=$CONTAINER_NAME-container-$VERSION" \
   -H "Authorization: Bearer $PORTAINER_TOKEN" \
   -H "Content-Type: application/json" \
-  -d "{
-    \"Image\": \"$CONTAINER_NAME:$VERSION\",
-    \"HostConfig\": {
-      \"PortBindings\": {
-        \"$CONTAINER_PORT/tcp\": [
+  -d '{
+    "Image": "'"$CONTAINER_NAME:$VERSION"'",
+    "HostConfig": {
+      "PortBindings": {
+        "'"$CONTAINER_PORT"'/tcp": [
           {
-            \"HostPort\": \"$CONTAINER_PORT\"
+            "HostPort": "'"$CONTAINER_PORT"'"
           }
         ]
       },
-      \"NetworkMode\": \"bridge\"
+      "NetworkMode": "bridge"
     },
-    \"ExposedPorts\": {
-      \"$CONTAINER_PORT/tcp\": {}
+    "ExposedPorts": {
+      "'"$CONTAINER_PORT"'/tcp": {}
     }
-  }")
+  }')
 
 # Extract body and status
 body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
 status_code=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
-# Check creation status
-if [ "$status_code" -eq 201 ]; then
-  echo "Container created successfully."
+
+# Check for success
+container_id=$(echo "$body" | jq -r '.Id // empty')
+error_message=$(echo "$body" | jq -r '.message // empty')
+
+if [ "$status_code" -eq 201 ] && [ -n "$container_id" ]; then
+  echo "Container created successfully: $container_id"
 else
   echo "Failed to create container. Status: $status_code"
-fi
-
-# Get container details
-container_info=$(curl -s -X GET "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/$CONTAINER_ID/json" \
-  -H "Authorization: Bearer $PORTAINER_TOKEN")
-  
-# Extract the status
-status=$(echo "$container_info" | jq -r '.State.Status')
-
-# Check if it's running
-if [ "$status" != "running" ]; then
-  echo "Container is not running. Status: $status"
+  echo "Error: $error_message"
   exit 1
-else
-  echo "Container is running."
 fi
-
-

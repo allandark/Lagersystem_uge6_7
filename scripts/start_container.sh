@@ -22,3 +22,24 @@ if [ "$status_code" -eq 204 ]; then
 else
   echo "Failed to start container. Status: $status_code"
 fi
+
+# Get container details
+container_info=$(curl -s -X GET "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/$CONTAINER_ID/json" \
+  -H "Authorization: Bearer $PORTAINER_TOKEN")
+  
+# Extract the status
+status=$(echo "$container_info" | jq -r '.State.Status')
+
+
+# Check for success
+container_id=$(echo "$body" | jq -r '.Id // empty')
+error_message=$(echo "$body" | jq -r '.message // empty')
+
+if [ "$status_code" -eq 201 ] && [ -n "$container_id" ]; then
+  echo "Container created successfully: $container_id"
+else
+  echo "Failed to create container. Status: $status_code"
+  echo "Error: $error_message"
+  exit 1
+fi
+
