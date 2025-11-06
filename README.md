@@ -64,6 +64,11 @@ python src/app.py
   ```
   docker compose up --build
   ```
+  If everything works, you should see the following output:
+  ```
+  Running on http://###.#.#.#:8000
+  ```
+  
 
 ### Tests
 The project uses the package `pytest` to perform unit- and integration-tests.
