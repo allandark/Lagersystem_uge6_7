@@ -47,7 +47,8 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'
-          echo "Version: $VERSION"    
+          echo "Version: $VERSION"  
+          sh "cp globals.env lager-frontend/globals.env"  
           sh "docker build -t $CONTAINER_NAME:$VERSION ."
       }
     }

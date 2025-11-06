@@ -9,8 +9,10 @@ export API_PORT=$(jq -r '.api_port' "$CONFIG_FILE")
 export DB_HOST=$(jq -r '.db_host' "$CONFIG_FILE")
 export VERSION=$(jq -r '.version' "$CONFIG_FILE")
 export VITE_API_URL="http://$API_HOST:$API_PORT"
+export VITE_VERSION="$VERSION"
 export PORTAINER_URL="http://$PORTAINER_HOST:$PORTAINER_PORT"
 export ENDPOINT_ID=1
+
 
 # Update the JSON file with sensitive credentials
 jq --arg db_user "$SQL_DB_USR" \
@@ -28,6 +30,8 @@ jq --arg db_user "$SQL_DB_USR" \
   echo "export VERSION=\"$VERSION\""
   echo "export PORTAINER_URL=\"$PORTAINER_URL\""
   echo "export ENDPOINT_ID=\"$ENDPOINT_ID\""
+  echo "export VITE_API_URL=\"$VITE_API_URL\""
+  echo "export VITE_VERSION=\"$VITE_VERSION\""
 } > ./globals.env
 
 source ./globals.env

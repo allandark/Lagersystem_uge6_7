@@ -4,10 +4,10 @@ interface HeaderProps {
 
 
 export default function Header({className}: HeaderProps) {
-  const version = import.meta.env.VERSION;
+  const version = import.meta.env.VITE_VERSION;
   return (
     <header className={className ?? "layout-header"}>
-      <h1>Lagersystem</h1>
+      <h1>Lagersystem</h1><br/>
       <small style={{ color: '#666' }}>Version: {version}</small>
       <nav>
         <a href="/">Home</a>

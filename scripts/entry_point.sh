@@ -1,5 +1,4 @@
 #!/bin/bash
-./scripts/update_config.sh
-
 echo "----- Running backend webserver -----"
+source globals.env
 python src/app.py
