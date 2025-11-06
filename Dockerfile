@@ -1,11 +1,12 @@
 FROM python:3.13
 
-# Install dependencies
-COPY requirements.txt ./requirements.txt
+WORKDIR /lagersystem
+
+COPY . /lagersystem/
 RUN pip install -r requirements.txt
 RUN apt update
 RUN apt install nodejs npm -y
+RUN cd lager-frontend && npm install && npm run build
 
-WORKDIR /lagersystem
 
-ENTRYPOINT ["/bin/bash", "./entry_point.sh"]
+ENTRYPOINT ["/bin/bash", "./scripts/entry_point.sh"]

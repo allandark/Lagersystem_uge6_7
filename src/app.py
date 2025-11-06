@@ -61,7 +61,7 @@ def create_app():
     # create the api
     api = create_api(
         title="Lagersystem API",
-        version="1.0",
+        version=config.version,
         description="Largersystem API",
         swagger_ui=config.swagger_ui,
         db_manager=dbManger

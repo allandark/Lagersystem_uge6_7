@@ -14,6 +14,7 @@ class Config:
     swagger_ui: bool
     api_host: str
     api_port: int
+    version: str
 
 
 
@@ -30,7 +31,8 @@ def ReadConfigFile(filename):
                 debug=data['debug'],
                 swagger_ui=data['swagger_ui'],
                 api_host=data['api_host'],
-                api_port=data['api_port']
+                api_port=data['api_port'],
+                version=data['version']
             )
         except Exception as e:
             print(f"Cannot read file \"{filename}\". Exception {e}")            
