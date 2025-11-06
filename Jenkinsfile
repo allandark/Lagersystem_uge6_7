@@ -66,19 +66,18 @@ pipeline {
     stage('Deploy'){
       steps {
         echo '--- Deploying docker container to portainer ---'
-        // withCredentials([usernamePassword(credentialsId: 'docker_account', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-        //     sh '''
-        //         echo "$DOCKER_PASS" | docker login https://registry-1.docker.io/v2/ \
-        //         --username="$DOCKER_USER" --password-stdin
-                    // docker tag lagersystem $DOCKER_HUB_USER/lagersystem
-                    // docker push $DOCKER_HUB_USER/lagersystem
-        //     '''
-        //   }
+
+        sh '''
+            set -e
+            echo \"$DOCKER_CREDENTIALS_PSW\" | docker login https://registry-1.docker.io/v2/ \
+              --username=\"$DOCKER_CREDENTIALS_USR\" --password-stdin
+            docker tag $CONTAINER_NAME:$VERSION $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
+            docker push $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
+        '''
 
         sh '''
         ./scripts/login_docker.sh
-        ./scripts/create_container.sh
-        ./scripts/start_container.sh
+        ./scripts/create_container.sh        
         '''
       }
     }
