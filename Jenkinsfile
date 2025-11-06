@@ -29,10 +29,13 @@ pipeline {
 
           sh 'ls -la'
           
-          sh '''
-          echo "\"$DOCKER_HUB_PSW\" | docker login https://registry-1.docker.io/v2/ --username=\"$DOCKER_HUB_USR\" --password-stdin
-          docker build -t lagersystem:latest .
-          '''
+          sh """
+          
+            echo \"$DOCKER_CREDENTIALS_PSW\" | docker login https://registry-1.docker.io/v2/ \
+                                    --username=\"$DOCKER_CREDENTIALS_USR\" --password-stdin
+
+            docker build -t lagersystem:latest .
+          """
       }
     }
 
