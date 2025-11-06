@@ -67,7 +67,7 @@ pipeline {
             set -e            
             echo $DOCKER_CREDENTIALS_PSW | docker login --username="$DOCKER_CREDENTIALS_USR" --password-stdin $DOCKER_HUB_HOST
             docker tag $CONTAINER_NAME:$VERSION $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
-            docker whoami
+            docker info | grep Username
             docker images | grep $CONTAINER_NAME
             docker push $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
         '''
