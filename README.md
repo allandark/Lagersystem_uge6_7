@@ -62,7 +62,7 @@ python src/app.py
     ```
 * * Run the following command:
   ```
-  docker build
+  docker compose up --build
   ```
 
 ### Tests
