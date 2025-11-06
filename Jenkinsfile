@@ -1,7 +1,6 @@
 pipeline {
   
     agent {
-
         docker {
             image 'specialistdj/jenkins-agent:latest'
             args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
@@ -21,17 +20,12 @@ pipeline {
     }
     
   
-
-
   stages {
-
     stage('Load Config'){
       steps{        
         sh 'chmod +x ./scripts/*.sh'
-        sh './scripts/update_config.sh'      
-        sh 'ls -la'   
+        sh './scripts/update_config.sh'              
         script {
- 
           // Read and parse the file line by line
           try {
             def envFilePath = "${env.WORKSPACE}/globals.env"            
@@ -64,26 +58,25 @@ pipeline {
 
       }
     }
+
     stage('Deploy'){
       steps {
         echo '--- Deploying docker container to portainer ---'
 
         sh '''
-            set -e
-            
+            set -e            
             echo $DOCKER_CREDENTIALS_PSW | docker login --username="$DOCKER_CREDENTIALS_USR" --password-stdin $DOCKER_HUB_HOST
             docker tag $CONTAINER_NAME:$VERSION $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
             docker push $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
 
         '''
 
-        // sh '''
-        // ./scripts/login_docker.sh
-        // ./scripts/create_container.sh        
-        // '''
+        sh '''
+        ./scripts/login_docker.sh
+        ./scripts/create_container.sh        
+        '''
       }
     }
-
   }
 
   post {
