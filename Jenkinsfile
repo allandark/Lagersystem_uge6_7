@@ -30,7 +30,7 @@ pipeline {
       steps {
           echo '--- Building docker image ---'                               
             script {                
-                env.VERSION = sh(script: "jq -r '.version' ./config.json", returnStdout: true).trim()
+                env.VERSION = sh(script: 'jq -r '.version' "$WORKSPACE/config.json"', returnStdout: true).trim()
             }
 
           echo "Version: $env.VERSION"     
