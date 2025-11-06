@@ -7,12 +7,18 @@ containers=$(curl -s -X GET "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/co
   -H "Authorization: Bearer $PORTAINER_TOKEN")
 
 # Filter by name prefix
-CONTAINER_ID=$(echo "$containers" | jq -r '.[] | select(.Names[] | test("^/lagersystem-container")) | .Id')
+CONTAINER_ID=$(echo "$containers" | jq -r --arg prefix "/$CONTAINER_NAME-container" '
+  .[] 
+  | select(.Names[]? | startswith($prefix)) 
+  | .Id
+')
+
 
 echo "Container ID: $CONTAINER_ID"
 
-status_code=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/$CONTAINER_ID?force=true"\
-    -H "Authorization: Bearer $PORTAINER_TOKEN")
+
+status_code=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/$CONTAINER_ID?force=true" \
+  -H "Authorization: Bearer $PORTAINER_TOKEN")
 
 if [ "$status_code" -eq 204 ]; then
   echo "Container deleted successfully."
@@ -21,8 +27,7 @@ else
 fi
 
 
-
-response=$(curl -s -w "HTTPSTATUS:%{http_code}" -X POST "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/create?name=lagersystem-container" \
+response=$(curl -s -w "HTTPSTATUS:%{http_code}" -X POST "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/create?name=$CONTAINER_NAME-container-$VERSION" \
   -H "Authorization: Bearer $PORTAINER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "{

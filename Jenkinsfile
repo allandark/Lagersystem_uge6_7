@@ -53,18 +53,14 @@ pipeline {
       steps {
           echo '--- Building docker image ---'
           echo "Version: $VERSION"    
-          sh "docker build -t lagersystem:$VERSION ."
+          sh "docker build -t $CONTAINER_NAME:$VERSION ."
       }
     }
 
     stage('Test') {
       steps {
         echo '--- Testing and generating reports ---'
-        // dir("${env.WORKSPACE}") {
-        //   sh 'pytest tests/unit --junitxml="tests/results/unittest_report.xml"'
-        // //   sh '''pytest tests/integration --junitxml="tests/results/integrationtest_report.xml"'''
-        //   junit 'tests/results/*.xml'
-        // }  
+
       }
     }
     stage('Deploy'){
@@ -74,14 +70,10 @@ pipeline {
         //     sh '''
         //         echo "$DOCKER_PASS" | docker login https://registry-1.docker.io/v2/ \
         //         --username="$DOCKER_USER" --password-stdin
-                
+                    // docker tag lagersystem $DOCKER_HUB_USER/lagersystem
+                    // docker push $DOCKER_HUB_USER/lagersystem
         //     '''
         //   }
-        // sh '''
-        // docker tag lagersystem $DOCKER_HUB_USER/lagersystem
-        // docker push $DOCKER_HUB_USER/lagersystem
-        // ./scripts/create_container.sh
-        // '''
 
         sh '''
         ./scripts/login_docker.sh
