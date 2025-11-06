@@ -25,7 +25,8 @@ pipeline {
     stage('Build') {
 
       steps {
-          echo '--- Building docker image ---'          
+          echo '--- Building docker image ---'   
+          sh "ls -la"       
           sh  """
           chmod +x ./scripts/update_config.sh
           ./scripts/update_config.sh
