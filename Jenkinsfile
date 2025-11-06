@@ -4,7 +4,7 @@ pipeline {
 
         docker {
             image 'specialistdj/jenkins-agent:latest'
-            args '-v /var/run/docker.sock:/var/run/docker.sock --entrypoint=""'
+            args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
         }
 
     }
