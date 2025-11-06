@@ -12,7 +12,6 @@ class DatabaseManager:
         self.user = user
         self.password = password
         self.dbname = dbname
-
         self.mydb = None
 
         self.product = ProductModel(self)

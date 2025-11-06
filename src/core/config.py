@@ -19,6 +19,7 @@ class Config:
 
 
 def ReadConfigFile(filename):
+    print(f"Loading config file: {filename}")
     with open(filename) as f:
         try:
             data = json.load(f)
@@ -34,6 +35,8 @@ def ReadConfigFile(filename):
                 api_port=data['api_port'],
                 version=data['version']
             )
+            print(f"db PSW length: {len(conf.db_password)}")
+            print(f"db USR: {conf.db_user}")
         except Exception as e:
             print(f"Cannot read file \"{filename}\". Exception {e}")            
             conf = None
