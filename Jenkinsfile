@@ -28,9 +28,9 @@ pipeline {
           echo '--- Building docker image ---'          
 
           sh 'ls -la'
-          sh 'docker ps'
+          
           sh '''
-          echo "$DOCKER_HUB_PSW" | docker login https://registry-1.docker.io/v2/ --username="$DOCKER_HUB_USR" --password-stdin
+          echo "\"$DOCKER_HUB_PSW\" | docker login https://registry-1.docker.io/v2/ --username=\"$DOCKER_HUB_USR\" --password-stdin
           docker build -t lagersystem:latest .
           '''
       }
