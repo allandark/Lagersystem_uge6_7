@@ -27,7 +27,7 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'
-          echo '$VAR_TEST'
+          echo "$VAR_TEST"
           // echo 'sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW, token: $JWT_TOKEN'
           // echo 'dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW'
           // echo 'portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW'
