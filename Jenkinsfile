@@ -3,7 +3,7 @@ pipeline {
     agent {
 
         docker {
-            image 'docker:latest'
+            image 'ubuntu:latest'
             args '-v /var/run/docker.sock:/var/run/docker.sock --entrypoint=""'
         }
 
