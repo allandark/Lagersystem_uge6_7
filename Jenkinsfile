@@ -28,19 +28,20 @@ pipeline {
     stage('Load Config'){
       steps{        
         script {
-            sh 'chmod +x ./scripts/*.sh'
-            sh './scripts/update_config.sh'
+          sh 'chmod +x ./scripts/*.sh'
+          sh './scripts/update_config.sh'
 
-            // Read and parse the file line by line
-            def envVars = readFile('./globals.env').split('\n')
-            envVars.each { line ->
-                def parts = line.trim().split('=')
-                if (parts.length == 2) {
-                    def key = parts[0]
-                    def value = parts[1]
-                    env[key] = value
-                }
-            }
+          // Read and parse the file line by line
+          def envVars = readFile('./globals.env').split('\n')
+          envVars.each { line ->
+              def parts = line.trim().split('=')
+              if (parts.length == 2) {
+                  def key = parts[0]
+                  def value = parts[1]
+                  env[key] = value
+              }
+          }
+        }
       }
     }
 
