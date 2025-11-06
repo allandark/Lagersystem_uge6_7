@@ -84,14 +84,14 @@ if __name__ == "__main__":
     if app is not None:
         if app.config["DEBUG"]:
             app.run(
-                host=app.config["API_HOST"],
+                host="0.0.0.0",
                 port=app.config["API_PORT"],
                 debug=True
             )
         else:
             serve(
                 app, 
-                host=app.config["API_HOST"],
+                host="0.0.0.0,
                 port=app.config["API_PORT"])
 
     
