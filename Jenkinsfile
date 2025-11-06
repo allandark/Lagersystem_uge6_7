@@ -31,14 +31,16 @@ pipeline {
           sh './scripts/update_config.sh'
           sh 'cat ~/globals.env'
           // Read and parse the file line by line
-          def envVars = readFile('~/globals.env').split('\n')
-          envVars.each { line ->
-              def parts = line.trim().split('=')
-              if (parts.length == 2) {
-                  def key = parts[0]
-                  def value = parts[1]
-                  env[key] = value
-              }
+          try {
+            def envVars = readFile('globals.env').split('\n')
+            envVars.each { line ->
+                def parts = line.trim().split('=')
+                if (parts.length == 2) {
+                    env[parts[0].replaceAll('export ', '')] = parts[1].replaceAll('"', '')
+                }
+            }
+          } catch(Exception e){
+            error "globals.env not found or unreadable: ${e.message}"
           }
         }
       }
