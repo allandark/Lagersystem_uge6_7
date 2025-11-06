@@ -9,16 +9,15 @@ pipeline {
 
     }
 
-    environment{      
-      VAR_TEST = "This is a var"
-      // SQL_DB = credentials('mysql_server')
-      // JWT_TOKEN = credentials('jwt_secret_token')
-      // DOCKER_HUB = credentials('docker_account')
-      // PORTAINER = credentials('portainer_account')
-      // PORTAINER_HOST = "172.20.88.184"
-      // PORTAINER_PORT = "9000"
-      // CONTAINER_PORT = "5000"      
-      // CONTAINER_NAMER = "lagersystem"
+    environment{            
+      SQL_DB = credentials('mysql_server')
+      JWT_TOKEN = credentials('jwt_secret_token')
+      DOCKER_HUB = credentials('docker_account')
+      PORTAINER = credentials('portainer_account')
+      PORTAINER_HOST = "172.20.88.184"
+      PORTAINER_PORT = "9000"
+      CONTAINER_PORT = "5000"      
+      CONTAINER_NAMER = "lagersystem"
     }
     
 
@@ -26,12 +25,11 @@ pipeline {
     stage('Build') {
 
       steps {
-          echo '--- Building docker image ---'
-          echo "$VAR_TEST"
-          // echo 'sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW, token: $JWT_TOKEN'
-          // echo 'dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW'
-          // echo 'portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW'
-          // sh 'ls -la'
+          echo '--- Building docker image ---'          
+          echo "sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW, token: $JWT_TOKEN"
+          echo "dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW"
+          echo "portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW"
+          sh 'ls -la'
           sh 'docker ps'
           // sh '''
           // echo "$DOCKER_HUB_PSW" | docker login https://registry-1.docker.io/v2/ --username="$DOCKER_HUB_USR" --password-stdin
