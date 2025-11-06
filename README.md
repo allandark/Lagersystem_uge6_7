@@ -57,11 +57,11 @@ python src/app.py
 
 * When you have downloaded this project:
 * * Navigate to the project folder:
-    ´´´
+    ```
     cd path/to/folder/Lagersystem_Docker_uge8
-    ´´´
+    ```
 * * Run the following command:
-  ´´´
+  ```
   docker build
   ```
 
