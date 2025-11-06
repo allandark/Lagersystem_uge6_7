@@ -21,7 +21,8 @@ else
 fi
 
 
-status_code=$(curl -s -X POST "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/create?name=lagersystem-container" \
+
+response=$(curl -s -w "HTTPSTATUS:%{http_code}" -X POST "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/create?name=lagersystem-container" \
   -H "Authorization: Bearer $PORTAINER_TOKEN" \
   -H "Content-Type: application/json" \
   -d "{
@@ -40,6 +41,11 @@ status_code=$(curl -s -X POST "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/
       \"$CONTAINER_PORT/tcp\": {}
     }
   }")
+
+# Extract body and status
+body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+status_code=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+
 
 
 if [ "$status_code" -eq 201 ]; then
