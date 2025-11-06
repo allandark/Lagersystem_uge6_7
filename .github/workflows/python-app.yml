@@ -35,4 +35,5 @@ jobs:
       run: python src/__init__.py --no-restore --file Lagersystem_Docker_uge8/Dockerfile
     - name: Test with pytest
       run: |
+        pythonpath = src
         pytest 
