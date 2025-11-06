@@ -29,9 +29,7 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'                               
-            script {                
-                env.VERSION = sh(script: 'jq -r '.version' "$WORKSPACE/config.json"', returnStdout: true).trim()
-            }
+          sh './scripts/update_config.sh'
 
           echo "Version: $env.VERSION"     
           sh "docker build -t lagersystem:$VERSION ."     
