@@ -17,33 +17,27 @@ pipeline {
       PORTAINER_HOST = "172.20.88.184"
       PORTAINER_PORT = "9000"
       CONTAINER_PORT = "5000"      
-      CONTAINER_NAME = "lagersystem"
+      CONTAINER_NAME = "lagersystem"    
+      VERSION = "latest"  
     }
     
+  
+
 
   stages {
     stage('Build') {
 
       steps {
-          echo '--- Building docker image ---' 
+          echo '--- Building docker image ---'                               
+            script {
+                def version = sh(script: "jq -r '.version' ./config.json", returnStdout: true).trim()
+                env.VERSION = version
+            }
+
+          echo "Version: $VERSION"     
+          sh "docker build -t lagersystem:$VERSION ."     
           
-          sh 'docker --version'
-          sh 'jq --version'
-          sh 'git --version'
-          
-          sh 'pwd'
-          sh 'ls -la'
-          sh  'bash ./scripts/update_config.sh'                   
-          
-          echo "Version: $VERSION"          
-          
-          withCredentials([usernamePassword(credentialsId: 'docker_account', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            sh '''
-                echo "$DOCKER_PASS" | docker login https://registry-1.docker.io/v2/ \
-                --username="$DOCKER_USER" --password-stdin
-                docker build -t lagersystem:$VERSION .
-            '''
-          }
+
 
       }
     }
@@ -61,6 +55,13 @@ pipeline {
     stage('Deploy'){
       steps {
         echo '--- Deploying docker container to portainer ---'
+        // withCredentials([usernamePassword(credentialsId: 'docker_account', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        //     sh '''
+        //         echo "$DOCKER_PASS" | docker login https://registry-1.docker.io/v2/ \
+        //         --username="$DOCKER_USER" --password-stdin
+                
+        //     '''
+        //   }
         // sh '''
         // docker tag lagersystem $DOCKER_HUB_USER/lagersystem
         // docker push $DOCKER_HUB_USER/lagersystem
