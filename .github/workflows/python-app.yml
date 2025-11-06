@@ -29,6 +29,13 @@ jobs:
         python -c "import src"
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Add src to PYTHONPATH
+      run: |
+        echo "Adding src to PYTHONPATH"
+        echo "PYTHONPATH=$(pwd)/src" >> $GITHUB_ENV  # This sets the PYTHONPATH environment variable for subsequent steps
+ 
+    - name: Check PYTHONPATH
+      run: echo $PYTHONPATH
     - name: Test with pytest
       run: |
         pytest 
