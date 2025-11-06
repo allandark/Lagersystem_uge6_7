@@ -1,18 +1,23 @@
-[] Docker
-    [x] Dockerfile
-    [] *Docker compose
-    [] Environment vars/config
-    [] Build with frontend dist installed
+[x] Docker
+    [x] Dockerfile    
+    [x] Environment vars/config
+    [x] Build with frontend dist installed
 
 [] Jenkins pipeline
     [x] Jenkinsfile
-    [] Run on commit
-    [] Build stage (build)
+    [x] Run on commit
+    [x] Build stage (build)
     [] Test stage nested docker
-    [] Deploy to portainer on success
+    [] Deploy stage to portainer on success
+    [] Post & artifacts
 
-[] Portainer    
-    [] Server setup
+[x] Portainer    
+    [x] Server setup
+
+[] Nice to have
+    [] Build status readme
+    [] Readme update with docker commands
+
 
 [] Unit test:
     [] warehouse api
