@@ -17,8 +17,7 @@ pipeline {
       PORTAINER_HOST = "172.20.88.184"
       PORTAINER_PORT = "9000"
       CONTAINER_PORT = "5000"      
-      CONTAINER_NAME = "lagersystem"    
-      VERSION = "latest"  
+      CONTAINER_NAME = "lagersystem"          
     }
     
   
