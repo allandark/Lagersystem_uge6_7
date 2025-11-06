@@ -69,8 +69,10 @@ pipeline {
 
         sh '''
             set -e
-            echo \"$DOCKER_CREDENTIALS_PSW\" | docker login https://registry-1.docker.io/v2/ \
-              --username=\"$DOCKER_CREDENTIALS_USR\" --password-stdin
+
+            echo -n "$DOCKER_CREDENTIALS_PSW" | docker login https://registry-1.docker.io/v2/ \
+              --username "$DOCKER_CREDENTIALS_USR" --password-stdi
+
             docker tag $CONTAINER_NAME:$VERSION $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
             docker push $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
         '''

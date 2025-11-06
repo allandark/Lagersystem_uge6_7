@@ -1,6 +1,6 @@
 #!/bin/bash
-source ~/globals.env
-source ~/.portainer_token.env
+source ./globals.env
+source ./.portainer_token.env
 
 # Get all containers
 containers=$(curl -s -X GET "$PORTAINER_URL/api/endpoints/$ENDPOINT_ID/docker/containers/json?all=true" \

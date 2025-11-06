@@ -11,4 +11,4 @@ export TOKEN=$(curl -s -X POST "$PORTAINER_URL/api/auth" \
   -d "{\"Username\":\"$USERNAME\",\"Password\":\"$PASSWORD\"}" | jq -r .jwt)
 
 echo "JWT Token: $TOKEN"
-echo "export PORTAINER_TOKEN=$TOKEN" > ~/.portainer_token.env
+echo "export PORTAINER_TOKEN=$TOKEN" > ./.portainer_token.env
