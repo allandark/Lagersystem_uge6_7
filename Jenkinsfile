@@ -10,7 +10,7 @@ pipeline {
     }
 
     environment{            
-      SQL_DB = credentials('mysql_server')
+      SQL_DB = credentials('mysql-server')
       // JWT_TOKEN = credentials('jwt_secret_token')
       // DOCKER_HUB = credentials('docker_account')
       // PORTAINER = credentials('portainer_account')
