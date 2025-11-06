@@ -55,7 +55,7 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'
-          sh "Version: $VERSION"    
+          echo "Version: $VERSION"    
           sh "docker build -t lagersystem:$VERSION ."
       }
     }

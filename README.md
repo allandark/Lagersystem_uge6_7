@@ -1,7 +1,7 @@
 # Lagersystem
 
 A simple warehouse management system that can be used for tracking orders, order status and warehouse status
-![Build Status](http://localhost:8080/job/Lagersystem)
+![Build Status](http://localhost:8080/job/Lagersystem/job/feature_ci_cd/)
 
 ## Description
 
