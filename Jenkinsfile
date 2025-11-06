@@ -28,10 +28,11 @@ pipeline {
     stage('Build') {
 
       steps {
-          echo '--- Building docker image ---'                               
+          echo '--- Building docker image ---'    
+          sh 'ls -la ./scripts'                           
           sh './scripts/update_config.sh'
 
-          echo "Version: $env.VERSION"     
+          echo "Version: $VERSION"     
           sh "docker build -t lagersystem:$VERSION ."     
           
 
