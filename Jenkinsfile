@@ -33,7 +33,7 @@ pipeline {
  
           // Read and parse the file line by line
           try {
-            def envVars = readFile('./globals.env').split('\n')
+            def envVars = readFile('globals.env').split('\n')
             envVars.each { line ->
                 def parts = line.trim().split('=')
                 if (parts.length == 2) {
