@@ -29,8 +29,8 @@ jobs:
         python -c "import src"
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    #- name: Restore dependencies
-      #run: python restore
+    - name: Restore dependencies
+      run: python src/__init__.py
     - name: Build
       run: python build --no-restore --file Lagersystem_Docker_uge8/Dockerfile
     - name: Test with pytest
