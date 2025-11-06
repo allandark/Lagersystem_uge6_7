@@ -28,8 +28,7 @@ pipeline {
       steps{        
         script {
           sh 'chmod +x ./scripts/*.sh'
-          sh './scripts/update_config.sh'
-          sh 'cat ~/globals.env'
+          sh './scripts/update_config.sh'          
           // Read and parse the file line by line
           try {
             def envVars = readFile('globals.env').split('\n')
