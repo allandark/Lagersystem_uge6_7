@@ -24,17 +24,32 @@ pipeline {
 
 
   stages {
+
+    stage('Load Config'){
+      steps{        
+        script {
+            sh 'chmod +x ./scripts/*.sh'
+            sh './scripts/update_config.sh'
+
+            // Read and parse the file line by line
+            def envVars = readFile('./globals.env').split('\n')
+            envVars.each { line ->
+                def parts = line.trim().split('=')
+                if (parts.length == 2) {
+                    def key = parts[0]
+                    def value = parts[1]
+                    env[key] = value
+                }
+            }
+      }
+    }
+
     stage('Build') {
 
       steps {
-          echo '--- Building docker image ---'    
-          sh """
-              chmod +x ./scripts/*.sh
-              ./scripts/update_config.sh
-              source ~/globals.env
-              echo \"Version: $VERSION\"
-              docker build -t lagersystem:$VERSION .
-          """
+          echo '--- Building docker image ---'
+          sh "Version: $VERSION"    
+          sh "docker build -t lagersystem:$VERSION ."
       }
     }
 
