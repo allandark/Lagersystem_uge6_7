@@ -29,8 +29,6 @@ jobs:
         python -c "import src"
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: run app  
-      run: python src
     - name: Test with pytest
       run: |
         pytest unit/test_product.py
