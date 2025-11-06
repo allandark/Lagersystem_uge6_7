@@ -30,12 +30,11 @@ pipeline {
           echo '--- Building docker image ---'    
           sh 'chmod +x ./scripts/*.sh'                           
           sh './scripts/update_config.sh'
-          sh "source ~/globals.env"
-          sh "echo Version: $VERSION"     
-          sh "docker build -t lagersystem:$VERSION ."     
-          
-
-
+          sh '''
+              source ~/globals.env
+              echo "Version: $VERSION"
+              docker build -t lagersystem:$VERSION .
+          '''
       }
     }
 
