@@ -29,3 +29,5 @@ jq --arg db_user "$SQL_DB_USR" \
   echo "export PORTAINER_URL=\"$PORTAINER_URL\""
   echo "export ENDPOINT_ID=\"$ENDPOINT_ID\""
 } > ~/globals.env
+
+source ~/globals.env

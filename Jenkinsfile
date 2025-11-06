@@ -26,8 +26,17 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'          
+          sh "./scripts/update_config.sh"          
+          echo "Version: $VERSION"          
+          
+          withCredentials([usernamePassword(credentialsId: 'docker_account', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                              sh '''
+                                  echo "$DOCKER_PASS" | docker login https://registry-1.docker.io/v2/ \
+                                  --username="$DOCKER_USER" --password-stdin
+                                  docker build -t lagersystem:$VERSION .
+                              '''
+          }
 
-          sh 'ls -la'
           
           sh """
           
