@@ -16,7 +16,7 @@ pipeline {
       PORTAINER_PORT = "9000"
       CONTAINER_PORT = "5000"      
       CONTAINER_NAME = "lagersystem"   
-      DOCKER_HUB_HOST = "https://registry-1.docker.io/v2/"
+      DOCKER_HUB_HOST = "docker.io"
     }
     
   
@@ -67,9 +67,7 @@ pipeline {
             set -e            
             echo $DOCKER_CREDENTIALS_PSW | docker login --username="$DOCKER_CREDENTIALS_USR" --password-stdin $DOCKER_HUB_HOST
             docker tag $CONTAINER_NAME:$VERSION $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
-            docker info | grep Username
-            docker images | grep $CONTAINER_NAME
-            docker push $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
+            docker push $DOCKER_HUB_HOST/$DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
         '''
 
         sh '''
