@@ -10,6 +10,7 @@ pipeline {
     }
 
     environment{      
+      VAR_TEST = "This is a var"
       // SQL_DB = credentials('mysql_server')
       // JWT_TOKEN = credentials('jwt_secret_token')
       // DOCKER_HUB = credentials('docker_account')
@@ -26,6 +27,7 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'
+          echo '$VAR_TEST'
           // echo 'sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW, token: $JWT_TOKEN'
           // echo 'dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW'
           // echo 'portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW'
@@ -38,26 +40,26 @@ pipeline {
       }
     }
 
-    stage('Test') {
-      steps {
-        echo '--- Testing and generating reports ---'
-        // dir("${env.WORKSPACE}") {
-        //   sh 'pytest tests/unit --junitxml="tests/results/unittest_report.xml"'
-        // //   sh '''pytest tests/integration --junitxml="tests/results/integrationtest_report.xml"'''
-        //   junit 'tests/results/*.xml'
-        // }  
-      }
-    }
-    stage('Deploy'){
-      steps {
-        echo '--- Deploying docker container to portainer ---'
-        // sh '''
-        // docker tag lagersystem $DOCKER_HUB_USER/lagersystem
-        // docker push $DOCKER_HUB_USER/lagersystem
-        // ./scripts/create_container.sh
-        // '''
-      }
-    }
+    // stage('Test') {
+    //   steps {
+    //     echo '--- Testing and generating reports ---'
+    //     // dir("${env.WORKSPACE}") {
+    //     //   sh 'pytest tests/unit --junitxml="tests/results/unittest_report.xml"'
+    //     // //   sh '''pytest tests/integration --junitxml="tests/results/integrationtest_report.xml"'''
+    //     //   junit 'tests/results/*.xml'
+    //     // }  
+    //   }
+    // }
+    // stage('Deploy'){
+    //   steps {
+    //     echo '--- Deploying docker container to portainer ---'
+    //     // sh '''
+    //     // docker tag lagersystem $DOCKER_HUB_USER/lagersystem
+    //     // docker push $DOCKER_HUB_USER/lagersystem
+    //     // ./scripts/create_container.sh
+    //     // '''
+    //   }
+    // }
 
   }
 
