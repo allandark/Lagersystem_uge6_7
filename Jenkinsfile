@@ -12,7 +12,7 @@ pipeline {
     environment{            
       SQL_DB = credentials('mysql-server')
       JWT_TOKEN = credentials('jwt_secret_token')
-      DOCKER_HUB = credentials('docker_account')
+      DOCKER_CREDENTIALS = credentials('docker_account')
       PORTAINER = credentials('portainer_account')
       PORTAINER_HOST = "172.20.88.184"
       PORTAINER_PORT = "9000"
