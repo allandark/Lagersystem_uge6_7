@@ -17,7 +17,7 @@ pipeline {
       PORTAINER_HOST = "172.20.88.184"
       PORTAINER_PORT = "9000"
       CONTAINER_PORT = "5000"      
-      CONTAINER_NAMER = "lagersystem"
+      CONTAINER_NAME = "lagersystem"
     }
     
 
@@ -28,7 +28,7 @@ pipeline {
           echo '--- Building docker image ---'          
           echo "sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW"
           echo "token: $JWT_TOKEN"
-          echo "$PORTAINER_HOST:$PORTAINER_PORT,$CONTAINER_NAMER:CONTAINER_PORT$"
+          echo "$PORTAINER_HOST:$PORTAINER_PORT,$CONTAINER_NAME:$CONTAINER_PORT"
           // echo "dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW"
           // echo "portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW"
           sh 'ls -la'
