@@ -11,9 +11,9 @@ pipeline {
 
     environment{            
       SQL_DB = credentials('mysql_server')
-      JWT_TOKEN = credentials('jwt_secret_token')
-      DOCKER_HUB = credentials('docker_account')
-      PORTAINER = credentials('portainer_account')
+      // JWT_TOKEN = credentials('jwt_secret_token')
+      // DOCKER_HUB = credentials('docker_account')
+      // PORTAINER = credentials('portainer_account')
       PORTAINER_HOST = "172.20.88.184"
       PORTAINER_PORT = "9000"
       CONTAINER_PORT = "5000"      
@@ -26,9 +26,11 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'          
-          echo "sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW, token: $JWT_TOKEN"
-          echo "dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW"
-          echo "portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW"
+          echo "sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW"
+          echo "token: $JWT_TOKEN"
+          echo "$PORTAINER_HOST:$PORTAINER_PORT,$CONTAINER_NAMER:CONTAINER_PORT$"
+          // echo "dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW"
+          // echo "portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW"
           sh 'ls -la'
           sh 'docker ps'
           // sh '''
