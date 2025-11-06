@@ -26,7 +26,11 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'          
-          sh "./scripts/update_config.sh"          
+          sh  """
+          chmod +x ./scripts/update_config.sh
+          ./scripts/update_config.sh
+          """
+          
           echo "Version: $VERSION"          
           
           withCredentials([usernamePassword(credentialsId: 'docker_account', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
