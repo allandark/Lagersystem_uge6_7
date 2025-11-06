@@ -91,7 +91,7 @@ if __name__ == "__main__":
         else:
             serve(
                 app, 
-                host="0.0.0.0,
+                host="0.0.0.0",
                 port=app.config["API_PORT"])
 
     

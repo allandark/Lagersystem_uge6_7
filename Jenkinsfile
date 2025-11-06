@@ -74,6 +74,7 @@ pipeline {
         sh '''
         ./scripts/login_docker.sh
         ./scripts/create_container.sh        
+        ./scripts/start_container.sh 
         '''
       }
     }
