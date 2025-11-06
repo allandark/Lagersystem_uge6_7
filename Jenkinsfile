@@ -6,7 +6,6 @@ pipeline {
             image 'specialistdj/jenkins-agent:latest'
             args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
         }
-
     }
 
     environment{            
@@ -32,7 +31,7 @@ pipeline {
           sh './scripts/update_config.sh'
 
           // Read and parse the file line by line
-          def envVars = readFile('./globals.env').split('\n')
+          def envVars = readFile('~/globals.env').split('\n')
           envVars.each { line ->
               def parts = line.trim().split('=')
               if (parts.length == 2) {
