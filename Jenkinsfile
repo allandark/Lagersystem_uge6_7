@@ -31,6 +31,7 @@ pipeline {
           echo '--- Building docker image ---'    
           sh 'chmod +x ./scripts/*.sh'                           
           sh './scripts/update_config.sh'
+          sh "cat ~/globals.env"
 
           echo "Version: $VERSION"     
           sh "docker build -t lagersystem:$VERSION ."     
