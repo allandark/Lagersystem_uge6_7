@@ -10,14 +10,14 @@ pipeline {
     }
 
     environment{      
-      SQL_DB = credentials('mysql_server')
-      JWT_TOKEN = credentials('jwt_secret_token')
-      DOCKER_HUB = credentials('docker_account')
-      PORTAINER = credentials('portainer_account')
-      PORTAINER_HOST = "172.20.88.184"
-      PORTAINER_PORT = "9000"
-      CONTAINER_PORT = "5000"      
-      CONTAINER_NAMER = "lagersystem"
+      // SQL_DB = credentials('mysql_server')
+      // JWT_TOKEN = credentials('jwt_secret_token')
+      // DOCKER_HUB = credentials('docker_account')
+      // PORTAINER = credentials('portainer_account')
+      // PORTAINER_HOST = "172.20.88.184"
+      // PORTAINER_PORT = "9000"
+      // CONTAINER_PORT = "5000"      
+      // CONTAINER_NAMER = "lagersystem"
     }
     
 
@@ -67,7 +67,7 @@ pipeline {
       // archiveArtifacts artifacts: 'tests/results/*.xml', fingerprint: true
       
       echo 'Cleaning up test cache...'
-      sh 'rm -rf .pytest_cache'
+      // sh 'rm -rf .pytest_cache'
 
     }
   }
