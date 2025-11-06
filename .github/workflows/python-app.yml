@@ -32,7 +32,7 @@ jobs:
     - name: Restore dependencies
       run: python src/__init__.py
     - name: Build
-      run: python build --no-restore --file Lagersystem_Docker_uge8/Dockerfile
+      run: python src/__init__.py --no-restore --file Lagersystem_Docker_uge8/Dockerfile
     - name: Test with pytest
       run: |
         pytest 
