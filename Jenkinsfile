@@ -28,13 +28,13 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'    
-          sh '''
+          sh """
               chmod +x ./scripts/*.sh
               ./scripts/update_config.sh
               source ~/globals.env
               echo "Version: $VERSION"
               docker build -t lagersystem:$VERSION .
-          '''
+          """
       }
     }
 
