@@ -28,8 +28,7 @@ pipeline {
           echo '--- Building docker image ---'   
           sh "ls -la"       
           sh  """
-          chmod +x ./scripts/update_config.sh
-          ./scripts/update_config.sh
+          bash ./scripts/update_config.sh
           """
           
           echo "Version: $VERSION"          
@@ -42,13 +41,6 @@ pipeline {
                               '''
           }
 
-          
-          sh """
-          
-            echo "$DOCKER_CREDENTIALS_PSW" | docker login https://registry-1.docker.io/v2/ --username="$DOCKER_CREDENTIALS_USR" --password-stdin
-
-            docker build -t lagersystem:latest .
-          """
       }
     }
 
