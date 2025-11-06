@@ -26,40 +26,36 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'          
-          echo "sqluser: $SQL_DB_USR, sqlpw: $SQL_DB_PSW"
-          echo "token: $JWT_TOKEN"
-          echo "$PORTAINER_HOST:$PORTAINER_PORT,$CONTAINER_NAME:$CONTAINER_PORT"
-          // echo "dockeruser: $DOCKER_HUB_USR, dockerpw: $DOCKER_HUB_PSW"
-          // echo "portuser: $PORTAINER_USR, portpw: $PORTAINER_PSW"
+
           sh 'ls -la'
           sh 'docker ps'
-          // sh '''
-          // echo "$DOCKER_HUB_PSW" | docker login https://registry-1.docker.io/v2/ --username="$DOCKER_HUB_USR" --password-stdin
-          // docker build -t lagersystem:latest .
-          // '''
+          sh '''
+          echo "$DOCKER_HUB_PSW" | docker login https://registry-1.docker.io/v2/ --username="$DOCKER_HUB_USR" --password-stdin
+          docker build -t lagersystem:latest .
+          '''
       }
     }
 
-    // stage('Test') {
-    //   steps {
-    //     echo '--- Testing and generating reports ---'
-    //     // dir("${env.WORKSPACE}") {
-    //     //   sh 'pytest tests/unit --junitxml="tests/results/unittest_report.xml"'
-    //     // //   sh '''pytest tests/integration --junitxml="tests/results/integrationtest_report.xml"'''
-    //     //   junit 'tests/results/*.xml'
-    //     // }  
-    //   }
-    // }
-    // stage('Deploy'){
-    //   steps {
-    //     echo '--- Deploying docker container to portainer ---'
-    //     // sh '''
-    //     // docker tag lagersystem $DOCKER_HUB_USER/lagersystem
-    //     // docker push $DOCKER_HUB_USER/lagersystem
-    //     // ./scripts/create_container.sh
-    //     // '''
-    //   }
-    // }
+    stage('Test') {
+      steps {
+        echo '--- Testing and generating reports ---'
+        // dir("${env.WORKSPACE}") {
+        //   sh 'pytest tests/unit --junitxml="tests/results/unittest_report.xml"'
+        // //   sh '''pytest tests/integration --junitxml="tests/results/integrationtest_report.xml"'''
+        //   junit 'tests/results/*.xml'
+        // }  
+      }
+    }
+    stage('Deploy'){
+      steps {
+        echo '--- Deploying docker container to portainer ---'
+        // sh '''
+        // docker tag lagersystem $DOCKER_HUB_USER/lagersystem
+        // docker push $DOCKER_HUB_USER/lagersystem
+        // ./scripts/create_container.sh
+        // '''
+      }
+    }
 
   }
 
