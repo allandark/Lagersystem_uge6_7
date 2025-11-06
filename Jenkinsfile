@@ -36,6 +36,7 @@ pipeline {
             def envFilePath = "${env.WORKSPACE}/globals.env"
             echo "globals.env path: ${envFilePath}"
             def envVars = readFile(envFilePath).split('\n')
+             echo "globals.env vars: ${envVars}"
             envVars.each { line ->
                 def parts = line.trim().split('=')
                 if (parts.length == 2) {
