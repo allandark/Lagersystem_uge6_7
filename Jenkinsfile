@@ -29,7 +29,7 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'    
-          sh 'ls -la ./scripts'                           
+          sh 'chmod +x ./*.sh'                           
           sh './scripts/update_config.sh'
 
           echo "Version: $VERSION"     
