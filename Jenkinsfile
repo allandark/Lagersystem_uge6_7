@@ -71,12 +71,12 @@ pipeline {
         sh '''
             set -e
             
-            docker login --username="$DOCKER_CREDENTIALS_USR" --password="$DOCKER_CREDENTIALS_PSW" $DOCKER_HUB_HOST
-               
+            echo $DOCKER_CREDENTIALS_PSW | docker login --username="$DOCKER_CREDENTIALS_USR" --password-stdin $DOCKER_HUB_HOST
+            docker tag $CONTAINER_NAME:$VERSION $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
+            docker push $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
 
         '''
-            // docker tag $CONTAINER_NAME:$VERSION $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
-            // docker push $DOCKER_CREDENTIALS_USR/$CONTAINER_NAME:$VERSION
+
         // sh '''
         // ./scripts/login_docker.sh
         // ./scripts/create_container.sh        
