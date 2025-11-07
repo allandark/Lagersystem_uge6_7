@@ -55,8 +55,8 @@ pipeline {
     stage('Test') {
       steps {
         echo '--- Testing and generating reports ---'
-        // sh"docker run --rm -it -v ./tests/results --entrypoint ./scripts/run_tests.sh $CONTAINER_NAME:$VERSION"
-        // junit 'tests/results/*.xml'
+        sh"docker run --rm -it -v ./tests/results --entrypoint ./scripts/run_tests.sh $CONTAINER_NAME:$VERSION"
+        junit 'tests/results/*.xml'
 
       }
     }
@@ -84,10 +84,10 @@ pipeline {
   post {
     always {
       echo '--- Archiving artifacts ---'
-      // archiveArtifacts artifacts: 'tests/results/*.xml', fingerprint: true
+      archiveArtifacts artifacts: 'tests/results/*.xml', fingerprint: true
       
       echo 'Cleaning up test cache...'
-      // sh 'rm -rf .pytest_cache'
+      sh 'rm -rf .pytest_cache'
 
     }
   }
