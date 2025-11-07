@@ -60,6 +60,16 @@ python src/app.py
     ```
     cd path/to/folder/Lagersystem_Docker_uge8
     ```
+* * To create the Dockerfile:
+  ```
+  docker init
+  ```
+  When prompted for language, choose Python 3.13
+  Make sure to set port to 8000.
+  When prompted for the command to run the application, set it to:
+  ```
+  python src/app.py
+  ```
 * * Run the following command:
   ```
   docker compose up --build
