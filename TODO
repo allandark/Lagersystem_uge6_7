@@ -8,7 +8,7 @@
     [x] Run on commit
     [x] Build stage (build)
     [] Test stage nested docker
-    [] Deploy stage to portainer on success
+    [x] Deploy stage to portainer on success
     [] Post & artifacts
 
 [x] Portainer    

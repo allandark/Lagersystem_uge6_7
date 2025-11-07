@@ -5,6 +5,7 @@ WORKDIR /lagersystem
 COPY . /lagersystem/
 RUN apt update
 RUN apt install nodejs npm jq -y
+RUN cp globals.env lager-frontend/globals.env
 RUN cd lager-frontend && npm install && npm run build
 RUN pip install -r requirements.txt
 

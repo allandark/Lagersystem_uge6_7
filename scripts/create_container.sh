@@ -54,7 +54,7 @@ status_code=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 container_id=$(echo "$body" | jq -r '.Id // empty')
 error_message=$(echo "$body" | jq -r '.message // empty')
 
-if [ "$status_code" -eq 202 ] && [ -n "$container_id" ]; then
+if [ "$status_code" -eq 200 ] && [ -n "$container_id" ]; then
   echo "Container created successfully: $container_id"
 else
   echo "Failed to create container. Status: $status_code"

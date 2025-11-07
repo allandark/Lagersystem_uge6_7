@@ -47,8 +47,7 @@ pipeline {
 
       steps {
           echo '--- Building docker image ---'
-          echo "Version: $VERSION"  
-          sh "cp globals.env lager-frontend/globals.env"  
+          echo "Version: $VERSION"            
           sh "docker build -t $CONTAINER_NAME:$VERSION ."
       }
     }
@@ -56,6 +55,7 @@ pipeline {
     stage('Test') {
       steps {
         echo '--- Testing and generating reports ---'
+        sh"docker run --rm -it -v $(pwd)/tests/results --entrypoint ./scripts/run_tests.sh $CONTAINER_NAME:$VERSION"
 
       }
     }
