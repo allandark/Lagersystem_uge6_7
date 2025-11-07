@@ -1,6 +1,6 @@
 #!/bin/bash
-source ~/globals.env
-source ~/.portainer_token.env
+source ./globals.env
+source ./.portainer_token.env
 
 
 # Get all containers
