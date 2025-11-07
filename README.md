@@ -13,9 +13,13 @@ This is a RESTful API utilizing a MySQL server to simulate keeping track of orde
 
 * Windows 11
 * Visual Studio Code 2022
-* Python 3.11
+* Python 3.13
+* MySQL Server
 
 ### Installing
+#### Config
+Fill out the `config.json` file
+
 #### Backend
 * Download the code as a .zip-folder.
 * Navigate to the folder, where you downloaded it.
@@ -33,6 +37,8 @@ This is a RESTful API utilizing a MySQL server to simulate keeping track of orde
 pip install -r requirements.txt
 ```
 * This will install all the necessary libraries for running the program
+
+
 
 #### Frontend
 * Install node.js.
@@ -55,14 +61,18 @@ python src/app.py
 ```
 
 ### Docker
-
+Build docker image
 ```
 docker build -t lagersystem:latest .
 ```
 
 ```
-docker run -v "$(pwd)":/lagersystem --network bridge -p 5000:5000 --name lagersystem-container lagersystem
+docker run --network bridge -p 5000:5000 lagersystem:<version_tag>|latest
 ```
+
+### Jenkins pipeline
+Pipeline runs on changes to any branch with a Jenkinsfile. The pipeline is setup as a multibranch pipeline and it will deploy and start the container on a portainer server. Look in Jenkinsfile and in config.json for configuration. For credentials refer to the Jenkins admin.
+
 
 ### Tests
 The project uses the package `pytest` to perform unit- and integration-tests.

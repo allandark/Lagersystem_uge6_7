@@ -3,13 +3,13 @@
     [x] Environment vars/config
     [x] Build with frontend dist installed
 
-[] Jenkins pipeline
+[x] Jenkins pipeline
     [x] Jenkinsfile
     [x] Run on commit
     [x] Build stage (build)
-    [] Test stage nested docker
+    [x] Test stage nested docker
     [x] Deploy stage to portainer on success
-    [] Post & artifacts
+    [x] Post & artifacts
 
 [x] Portainer    
     [x] Server setup
