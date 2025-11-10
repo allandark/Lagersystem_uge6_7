@@ -55,7 +55,8 @@ pipeline {
     stage('Test') {
       steps {
         echo '--- Testing and generating reports ---'
-        sh"docker run --rm -v ./tests/results --entrypoint ./scripts/run_tests.sh $CONTAINER_NAME:$VERSION"
+        sh"docker run --rm -v ./tests/results/ --entrypoint ./scripts/run_tests.sh $CONTAINER_NAME:$VERSION"
+        sh"ls -R tests"
         junit 'tests/results/*.xml'
 
       }
