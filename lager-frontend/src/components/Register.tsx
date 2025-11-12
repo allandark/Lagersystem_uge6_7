@@ -1,5 +1,5 @@
 import { useState,  } from 'react';
-import { getToken, setToken, clearToken } from '../authService';
+import { getToken, setToken, clearToken } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -45,7 +45,7 @@ export default function RegisterForm() {
       };
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+        // e.preventDefault();
         sendRegister();
     };
 

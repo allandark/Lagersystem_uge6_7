@@ -10,13 +10,15 @@
     [x] Test stage nested docker
     [x] Deploy stage to portainer on success
     [x] Post & artifacts
+    [] Test results
 
 [x] Portainer    
     [x] Server setup
 
 [] Nice to have
     [] Build status readme
-    [] Readme update with docker commands
+    [x] Readme update with docker commands
+    
 
 
 [] Unit test:
@@ -36,7 +38,13 @@
     [] Database interaction
     [] Full pipeline
 
+
+[] Bugs:
+    [] SQLAlchemy/crashes on requests
+
 [] Frontend:
-    [] Login/page redirect, functionality
-    [] Orders
+    [] Login/page redirect, functionality    
     [] Product Add, Update, Delete
+    [] Customer Get, Add, update, delete
+    [] Browser icon
+    [] 

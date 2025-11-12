@@ -70,6 +70,11 @@ docker build -t lagersystem:latest .
 docker run --network bridge -p 5000:5000 lagersystem:<version_tag>|latest
 ```
 
+```
+docker run --rm --network bridge -p 5000:5000 lagersystem:latest
+```
+
+
 ### Jenkins pipeline
 Pipeline runs on changes to any branch with a Jenkinsfile. The pipeline is setup as a multibranch pipeline and it will deploy and start the container on a portainer server. Look in Jenkinsfile and in config.json for configuration. For credentials refer to the Jenkins admin.
 

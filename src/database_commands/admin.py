@@ -17,7 +17,7 @@ class AdminModel:
                     results.append(AdminModel._TupleToDict(u))
                 return results
         except Exception as e:
-            print("Error checking if product exist by id:", e)
+            print("Error Getting all admin users:", e)
             return False
 
 
@@ -31,7 +31,7 @@ class AdminModel:
                 user = AdminModel._TupleToDict(myresult[0])
                 return user
         except Exception as e:
-            print("Error checking if product exist by id:", e)
+            print(f"Error checking if admin exist by id({id}):", e)
             return False
         
     def Insert(self, name, password_hash):
@@ -50,7 +50,7 @@ class AdminModel:
                 "password_hash": password_hash
             }
         except Exception as e:
-            print("Error checking if product exist by id:", e)
+            print("Error inserting into db:", e)
             return False
         
     def Update(self, admin_id, name, password_hash):
@@ -84,7 +84,7 @@ class AdminModel:
             conn.commit()
             return True
         except Exception as e:
-            print("Error checking if product exist by id:", e)
+            print(f"Error updating admin name by id({admin_id}):", e)
             return False
         
     def UpdatePassword(self,admin_id, password_hash):
@@ -97,7 +97,7 @@ class AdminModel:
             conn.commit()
             return True
         except Exception as e:
-            print("Error checking if product exist by id:", e)
+            print(f"Error updating admin password by id({admin_id}):", e)
             return False
 
     def Delete(self, admin_id):
@@ -108,7 +108,7 @@ class AdminModel:
                 cursor.execute(query, (admin_id,))
             return True
         except Exception as e:
-            print(f"Error deleting admin: {e}")
+            print(f"Error deleting admin({admin_id}): {e}")
             return False
 
 

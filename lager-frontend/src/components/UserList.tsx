@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { getToken, clearToken } from '../authService';
+import { getToken, clearToken } from '../services/authService';
 import type { AdminUser } from '../types/Types';
 import { useNavigate } from 'react-router-dom';
 

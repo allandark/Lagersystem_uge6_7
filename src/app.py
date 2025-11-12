@@ -45,7 +45,7 @@ def create_app():
     # CORS(app, origins=
     #     [f"http://{config.api_host}:{config.api_port}", 
     #     f"http://localhost:{config.api_port}"], supports_credentials=True) 
-    CORS(app)
+    CORS(app, supports_credentials=True)
  
     # Create the endpoint to serve the frontpage
     @app.route("/")

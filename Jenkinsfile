@@ -88,7 +88,7 @@ pipeline {
       archiveArtifacts artifacts: 'tests/results/*.xml', fingerprint: true
       
       echo 'Cleaning up test cache...'
-      deleteDir()
+      // deleteDir()
       sh 'rm -rf .pytest_cache'
 
     }
