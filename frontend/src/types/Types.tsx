@@ -23,3 +23,9 @@ export interface ProductData{
     price: number;
     status: string;
 }
+
+export interface CustomerData{
+    id: number;
+    name: string;
+    email: string;
+}

@@ -45,6 +45,7 @@ export default function ProductsPage() {
     const getProducts = async() =>{
         try{
             const res = await fetch(`${API_URL}/api/product/`)
+            console.log(res)
             const data: ProductData[] = await res.json()
             return Array.isArray(data) ? data : [];
         }
@@ -69,13 +70,19 @@ export default function ProductsPage() {
 
     
     useEffect(() => {
+        async function sleep(ms: number): Promise<void> {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+        }
         const fetchData = async () => {
             const warehouses = await getWarehouses();
+            await sleep(2000);
             const results: DisplayItem[] = [];
             const products: ProductData[] = await getProducts();
+            await sleep(2000);
             for(const wh of warehouses){
                 console.log(`Getting inventory from: ${wh.name}`)
                 const currentInventory = await getInventory(wh.id)
+                await sleep(2000);
                 if(currentInventory){
                     for(const inventory of currentInventory){
                         
