@@ -1,11 +1,21 @@
-import Navbar from '@/scenes/navbar';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
+import Home from "./pages/Home";
+import Products from "./pages/Products";
+import Customer from "./pages/Customer";
+import Admin from "./pages/Admin";
 
-    return <div className="app bg-gray-20">
-        <Navbar />
-
-    </div>;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/customer" element={<Customer />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App;
+
