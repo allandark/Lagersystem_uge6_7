@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Products from "./pages/Products";
-import Customer from "./pages/Customer";
+import {CustomerPage as Customer} from "./pages/Customer";
 import Admin from "./pages/Admin";
 
 export default function App() {
