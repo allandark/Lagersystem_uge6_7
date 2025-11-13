@@ -1,6 +1,7 @@
 import Layout from "../components/Layout";
 import type { WarehouseData, InventoryData, CustomerData  } from "../types/Types";
 import { useState, useEffect } from 'react';
+import SearchBar from '@/components/SearchBar'
 import "./Customer.css"
 
 interface DisplayItem {
@@ -106,16 +107,17 @@ export default function CustomerPage() {
 
             <div>
                 <h2>Inventory Overview</h2>
+                <div className={"searchBar"} >
+                    <SearchBar />
+                </div>
 
 
                 <table className="table">
                     <thead>
                     <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Status</th>
-                        <th>Location</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
                     </tr>
                     </thead>
                     <tbody>
