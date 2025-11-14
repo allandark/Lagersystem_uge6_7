@@ -85,11 +85,11 @@ pipeline {
   post {
     always {
       echo '--- Archiving artifacts ---'
-      archiveArtifacts artifacts: 'tests/results/*.xml', fingerprint: true
+      // archiveArtifacts artifacts: 'tests/results/*.xml', fingerprint: true
       
       echo 'Cleaning up test cache...'
       // deleteDir()
-      sh 'rm -rf .pytest_cache'
+      // sh 'rm -rf .pytest_cache'
 
     }
   }
