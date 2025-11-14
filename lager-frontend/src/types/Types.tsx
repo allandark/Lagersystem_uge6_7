@@ -1,13 +1,13 @@
 
-export interface WarehouseData {
-  id: number;
-  name: string;
-}
-
 export interface AdminUser{
     id: number;
     name: string;
     password_hash: string;
+}
+
+export interface WarehouseData {
+  id: number;
+  name: string;
 }
 
 export interface InventoryData{
@@ -22,4 +22,20 @@ export interface ProductData{
     name: string;
     price: number;
     status: string;
+}
+
+export interface CustomerData{
+    id: number;
+    name: string;
+    email: string;
+}
+
+export interface InvoiceData{
+    id: number;
+    product_id: number;
+    invoice_number: number;
+    customer_id: number;
+    status: string;
+    quantity: number;
+    warehouse_id: number;
 }

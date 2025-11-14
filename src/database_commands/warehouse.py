@@ -19,6 +19,9 @@ class WarehouseModel:
         except Exception as e:
             print("Error getting all lager:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def GetByID(self, lagerID):
         
@@ -31,6 +34,9 @@ class WarehouseModel:
         except Exception as e:
             print("Error getting lagers by ID:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def GetByName(self, navn):
         
@@ -47,6 +53,9 @@ class WarehouseModel:
         except Exception as e:
             print("Error getting lagers by navn:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def Insert(self, navn):
         
@@ -66,6 +75,9 @@ class WarehouseModel:
         except Exception as e:
             print("Error inserting Lager:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def Update(self, id, navn):
         try:
@@ -88,6 +100,9 @@ class WarehouseModel:
         except Exception as e:
             print(f"Error updating LagerManger: {e}")
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def Delete(self, id):
         try:
@@ -100,6 +115,9 @@ class WarehouseModel:
         except Exception as e:
             print(f"Error deleting lager: {e}")
             return False
+        finally:
+            if conn is not None:
+                conn.close()
     
     def _tuple2Dict(tuple):
         return {"id": tuple[0], "name": tuple[1]}

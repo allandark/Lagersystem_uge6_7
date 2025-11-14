@@ -171,7 +171,7 @@ def create_api_warehouse(db_manager):
             product_id = parse_dict_key(api.payload, 'product_id')
             warehouse_id = parse_dict_key(api.payload, 'warehouse_id')
             quantity = parse_dict_key(api.payload, 'quantity')
-            item = db_manager.warehosue_inventory.Update(
+            item = db_manager.warehouse_inventory.Update(
                 item_id,
                 warehouse_id,
                 product_id,

@@ -1,4 +1,4 @@
-import type { WarehouseData, InventoryData, ProductData  } from "../types/Types";
+import type { WarehouseData, InventoryData, ProductData, InvoiceData, CustomerData  } from "../types/Types";
 
 export const AuthLogin = async (url:string, name: string, password: string) =>  {
     try {
@@ -27,8 +27,77 @@ export const AuthLogin = async (url:string, name: string, password: string) =>  
 };
 
 
+export const Post = async (url:string, body: Object, token: string) =>{
+    try {
+        
+        const res = await fetch(`${url}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            },
+            credentials: 'include',
+            body: JSON.stringify(body),
+        });
+        console.log(`Res: ${res}`)    
+        const data: any = await res.json();                     
+        return data;
+        
+    } catch (error) {
+        console.error("Login error:", error); 
+        return null;
+    }
+};
 
-export const GetWarehouses = async (url:string,) =>{
+
+export const Put = async (url:string, id: number, body: Object, token: string) =>{
+    try {
+
+        console.log(body)
+        
+        const res = await fetch(`${url}/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            },
+            credentials: 'include',
+            body: JSON.stringify(body),
+        });
+        console.log(`Res: `, res)    
+        
+        const data: any = await res.json();                     
+        return data;
+        
+    } catch (error) {
+        console.error("Put error:", error); 
+        return null;
+    }
+};
+
+export const Delete = async (url:string, id: number, token: string) =>{
+    try {
+        
+        const res = await fetch(`${url}/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            },
+            credentials: 'include',
+        });
+        console.log(`Res: ${res}`)    
+        const data: any = await res.json();                     
+        return data;
+        
+    } catch (error) {
+        console.error("Login error:", error); 
+        return null;
+    }
+};
+
+
+export const GetWarehouses = async (url:string) =>{
     try{
         const res = await fetch(`${url}/api/warehouse/`)
         const data: WarehouseData[] = await res.json()                        
@@ -78,12 +147,51 @@ export const GetInventory = async (url: string, id: number) => {
     }    
 }
 
-export const AddProduct = async (
-    url:string, name: string, price: number, status: string) =>  {
-    return null;
+// export const AddProduct = async (
+//     url:string, name: string, price: number, status: string) =>  {
+//     return null;
+// }
+
+// export const UpdateProduct = async (
+//     url:string, id: number, name: string, price: number, status: string) =>  {
+//     return null;
+// }
+
+export const GetInvoices = async (url: string) => {
+    try{
+        const res = await fetch(`${url}/api/orders`)
+        const data = await res.json()    
+        let invoices: Array<InvoiceData> =  [] 
+        for(let i = 0; i < data.length; i++) {            
+            const  invoice :InvoiceData = {} as InvoiceData
+            invoice.id = data[i]["orderID"]
+            invoice.product_id = data[i]["produktID"]
+            invoice.invoice_number = data[i]["invoicenummer"]
+            invoice.customer_id = data[i]["customerID"]
+            invoice.status = data[i]["status"]
+            invoice.quantity = data[i]["mængde"]
+            invoice.warehouse_id = data[i]["lagerID"]
+            invoices.push(invoice)
+   
+        }                  
+        return Array.isArray(invoices) ? invoices : [];
+    }
+    catch(error){
+        console.log("Error fetching invoices:", error);
+        return [];
+    }    
 }
 
-export const UpdateProduct = async (
-    url:string, id: number, name: string, price: number, status: string) =>  {
-    return null;
+
+export const GetCustomers = async (url: string) => {
+    try{
+        const res = await fetch(`${url}/api/customer`)
+        const data: CustomerData[] = await res.json()    
+        // console.log(data)
+        return Array.isArray(data) ? data : [];
+    }
+    catch(error){
+        console.log("Error fetching customers:", error);
+        return [];
+    }    
 }

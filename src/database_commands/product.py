@@ -20,6 +20,9 @@ class ProductModel:
         except Exception as e:
             print("Error getting product:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def GetById(self, id):
         
@@ -37,6 +40,9 @@ class ProductModel:
         except Exception as e:
             print("Error getting product by id:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def GetByPrice(self, price):
         
@@ -51,6 +57,10 @@ class ProductModel:
         except Exception as e:
             print("Error getting product by price:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
+
 
     def GetPriceByInterval(self, lov_price,high_price):
         
@@ -65,6 +75,9 @@ class ProductModel:
         except Exception as e:
             print("Error getting product in price interval:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
             
     def insertproduct(self, name, price):
         
@@ -76,12 +89,6 @@ class ProductModel:
 
                 cursor.execute(query)
                 n_id = cursor.lastrowid
-                # if(cursor.with_rows==True):
-                #     result = cursor.fetchall()
-                #     return self._totuple(result)
-                # else:
-                #     result = cursor.fetchwarnings()
-                #     return result
             conn.commit()
             product = {
                 "id": n_id,
@@ -92,6 +99,9 @@ class ProductModel:
         except Exception as e:
             print("Error inserting product:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def GetbyName(self, name):
         
@@ -106,6 +116,9 @@ class ProductModel:
         except Exception as e:
             print("Error getting product by name:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
     
     def UpdateItemStatus(self, id, status):
 
@@ -121,6 +134,9 @@ class ProductModel:
         except Exception as e:
             print("Error removing product by ID:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
     def UpdateProduct(self, id, navn, pris, status):
 
@@ -140,6 +156,9 @@ class ProductModel:
         except Exception as e:
             print("Error updating product:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def exist(self,id):
         try:
@@ -156,6 +175,9 @@ class ProductModel:
         except Exception as e:
             print("Error checking if product exist by id:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
     def _totuple(self, myresult):
         result = {

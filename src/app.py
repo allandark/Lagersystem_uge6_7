@@ -50,7 +50,7 @@ def create_app():
     # Create the endpoint to serve the frontpage
     @app.route("/")
     @app.route("/products")
-    @app.route("/customer")
+    @app.route("/invoice")
     @app.route("/admin")
     def serve_react():  
         

@@ -21,6 +21,9 @@ class CustomersModel:
         except Exception as e:
             print("Error checking if product exist by id:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
 
     def GetById(self, id):
@@ -38,6 +41,9 @@ class CustomersModel:
         except Exception as e:
             print("Error checking if customer exist by id:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
     
     def GetByEmail(self, email):
 
@@ -54,6 +60,9 @@ class CustomersModel:
         except Exception as e:
             print("Error checking if customer exist by email:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
     def Insert(self, name, email):
 
@@ -75,6 +84,9 @@ class CustomersModel:
         except Exception as e:
             print("Error checking if product exist by id:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def Update(self, customerid, name, email):
         try:
@@ -96,6 +108,9 @@ class CustomersModel:
         except Exception as e:
             print(f"Customer update error: {e}")
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def Delete(self, id):
         try:
@@ -108,6 +123,9 @@ class CustomersModel:
         except Exception as e:
             print(f"Error deleting customers: {e}")
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def _toTuple(tuple):
         return {

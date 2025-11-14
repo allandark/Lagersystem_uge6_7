@@ -1,4 +1,4 @@
-import mysql.connector
+from mysql.connector import pooling, errors
 from database_commands.product import ProductModel
 from database_commands.orders import OrdersModel
 from database_commands.admin import AdminModel
@@ -7,43 +7,60 @@ from database_commands.warehouse_inventory import WarehuseInventoryModel
 from database_commands.warehouse import WarehouseModel
 
 class DatabaseManager:
-    def __init__(self, host, user, password, dbname):
+    def __init__(self, host, user, password, dbname, pool_size = 10):
         self.host = host
         self.user = user
         self.password = password
         self.dbname = dbname
-        self.mydb = None
-
+        
+        self.pool_size = pool_size
+        self.pool = None
+        
         self.product = ProductModel(self)
         self.orders = OrdersModel(self)
         self.admin = AdminModel(self)
         self.customers = CustomersModel(self)
         self.warehouse = WarehouseModel(self)
         self.warehouse_inventory = WarehuseInventoryModel(self)
-        try:
-            self.get_connection()
-            if self.mydb is not None:
-                self.is_connected = True
-            else:
-                self.is_connected = False
 
-        except Exception as e:
-            print(f"Could not connect to database: {dbname}")
-            self.is_connected = False
+        self.connect()
+
+    def connect(self):
+        try:
+            self.pool = pooling.MySQLConnectionPool(
+                pool_name="my_sql_pool",
+                pool_size=self.pool_size,
+                host=self.host,
+                user=self.user,
+                password=self.password,
+                database=self.dbname
+            )
+        except errors.InterfaceError as e:
+            #cant reach server
+            print(f"Error: Can't reach sql database: {self.dbname}")
+            self.pool = None
+        except errors.ProgrammingError as e:
+            # invalid credentials
+            print(f"Error: Invalid credentials: {self.user}")
+            self.pool = None
+        except errors.DatabaseError as e:
+            # database error
+            print(f"Error: General database error")
+            self.pool = None
+
+
+    def is_connected(self):
+        self.pool != None
  
 
     def get_connection(self):
         try:
-            if not self.mydb or not self.mydb.is_connected():
-                self.mydb = mysql.connector.connect(
-                    host=self.host,
-                    user=self.user,
-                    password=self.password,
-                    database=self.dbname
-                )
-            return self.mydb
-        except Exception as e:
-            print(f"Could not get sql connection: {e}")
+            return self.pool.get_connection()
+        except errors.PoolError as e:
+            print(f"No available sql db pools: {e}")
+            return None
+        except errors.Error as e:
+            print(f"Database error: {e}")
             return None
 
         

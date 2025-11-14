@@ -1,8 +1,8 @@
 import Layout from "../components/Layout";
-import { useNavigate } from "react-router-dom";
-import HeroCarousel from "../components/HeroCarousel";
+// import { useNavigate } from "react-router-dom";
+import DailyReddit from "../components/DailyReddit";
 export default function Home() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <Layout>
 <section className="flex flex-col items-center justify-center text-center py-20">
@@ -16,13 +16,10 @@ export default function Home() {
           Manage your inventory effortlessly with a modern, sleek interface. 
           Track, update, and visualize your stock in real-time.
         </p>
-        <button onClick={() => navigate("/admin")} className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold 
-                           rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-          Get Started
-        </button>
+ 
       </section>
 
-      <HeroCarousel/>
+      <DailyReddit/>
 
       {/* Features Section */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 px-4 md:px-16">

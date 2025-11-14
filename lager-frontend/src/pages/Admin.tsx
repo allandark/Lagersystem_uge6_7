@@ -7,34 +7,31 @@ import { setToken, getToken } from '../services/authService';
 import { useState, useEffect } from 'react';
 
 export default function AdminPage() {
+  const [tokenState, setTokenState] = useState<string | null>(null);
 
-    const [tokenState, setTokenState] = useState<string | null>(null);
-    
-    // useEffect(() => {   
-            
-    //     setTokenState(getToken());
-    //     console.log(tokenState) 
-    // }, []);
+  useEffect(() => {
+    setTokenState(getToken());
+  }, []);
 
-
-    return (
-        <Layout>
-         
-            
+  return (
+    <Layout>
+      <div className="flex min-h-[80vh] items-center justify-center">
         {tokenState ? (
-        <div>
-            <UserInfo/>
-            {/* <RegisterForm/> */}
-            {/* <UserList/> */}
-        </div>
+          <div className="space-y-6 text-cyan-200">
+            <UserInfo />
+            <RegisterForm />
+            <UserList />
+         
+          </div>
         ) : (
-            <LoginForm onLoginSuccess={(token)=>{
-                console.log(`Login Success - Token: ${token}`)
-                setToken(token);
-                setTokenState(token)}}/>
+          <LoginForm
+            onLoginSuccess={(token) => {
+              setToken(token);
+              setTokenState(token);
+            }}
+          />
         )}
-
-            
-        </Layout>
-    );
+      </div>
+    </Layout>
+  );
 }

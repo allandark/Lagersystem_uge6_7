@@ -19,6 +19,9 @@ class OrdersModel:
         except Exception as e:
             print("Error getting all orders:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
 
     def Insert(self, produktID,invoicenummer,customerid,status,mængde,lagerID):
@@ -37,6 +40,10 @@ class OrdersModel:
         except Exception as e:
             print("Error inserting orders:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
+
     def GetByID(self, OrderID):
         
         try:
@@ -50,6 +57,9 @@ class OrdersModel:
         except Exception as e:
             print("Error getting orders by orderID:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def GetByProductID(self, produktID):
         
@@ -64,6 +74,9 @@ class OrdersModel:
         except Exception as e:
             print("Error getting orders by productID:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
 
     def GetByCustomerID(self, customerid):
@@ -78,6 +91,9 @@ class OrdersModel:
         except Exception as e:
             print("Error getting orders by customerID:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def GetByWarehouseID(self, lagerID):
         
@@ -91,6 +107,9 @@ class OrdersModel:
         except Exception as e:
             print("Error getting orders by lagerID:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
 
     def GetbyStatus(self, status):
@@ -105,6 +124,9 @@ class OrdersModel:
         except Exception as e:
             print("Error getting orders by status:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
 
     def GetByInvoiceNumber(self, invoicenummer):
@@ -119,6 +141,9 @@ class OrdersModel:
         except Exception as e:
             print("Error getting orders by invoicenumber:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
     
     def UpdateOrder(self, orderID, produktID,invoicenummer,customerid,status,mængde,lagerID):
 
@@ -133,6 +158,9 @@ class OrdersModel:
         except Exception as e:
             print("Error updating order:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def UpdateStatus(self, OrderID,newStatus):
         
@@ -148,6 +176,9 @@ class OrdersModel:
         except Exception as e:
             print("Error updateing orders status:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
     def OrderCustomerView(self, customerid):
         
@@ -170,6 +201,9 @@ class OrdersModel:
         except Exception as e:
             print("Error getting orders in customerview:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def _totuple(self, myresult):
         result = {

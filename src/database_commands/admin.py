@@ -19,6 +19,9 @@ class AdminModel:
         except Exception as e:
             print("Error Getting all admin users:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
 
     def GetById(self, id):
@@ -33,7 +36,9 @@ class AdminModel:
         except Exception as e:
             print(f"Error checking if admin exist by id({id}):", e)
             return False
-        
+        finally:
+            if conn is not None:
+                conn.close()
     def Insert(self, name, password_hash):
         
         try:
@@ -52,6 +57,9 @@ class AdminModel:
         except Exception as e:
             print("Error inserting into db:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
     def Update(self, admin_id, name, password_hash):
         try:
@@ -73,6 +81,9 @@ class AdminModel:
         except Exception as e:
             print(f"Error updating admin: {e}")
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def UpdateName(self, admin_id, new_name):
         
@@ -86,6 +97,9 @@ class AdminModel:
         except Exception as e:
             print(f"Error updating admin name by id({admin_id}):", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
     def UpdatePassword(self,admin_id, password_hash):
         
@@ -99,6 +113,9 @@ class AdminModel:
         except Exception as e:
             print(f"Error updating admin password by id({admin_id}):", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def Delete(self, admin_id):
         try:
@@ -110,6 +127,9 @@ class AdminModel:
         except Exception as e:
             print(f"Error deleting admin({admin_id}): {e}")
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
 
     def _TupleToDict(tuple):        

@@ -24,44 +24,20 @@ def create_api_product(db_manager):
             'price': fields.Float(required=True, description="Poduct price"),
             'status': fields.String})
 
-    @api.route("/id<int:id>")
+    @api.route("/<int:id>")
     class ProductGetById(Resource):
         @api.doc('Get product based on ID')
         def get(self, id):
             products = db_manager.product.GetById(id)
             # print(products)
             return products, 200
-        
-    @api.route("price/<price>")
-    class ProductGetByPrice(Resource):
-        @api.doc('Get product based on price')
-        def get(self, price):
-            newPrice = float (price)
-            products = db_manager.product.GetByPrice(price)
-            print(products)
-            return {"products":products}, 200
-        
-    @api.route("/price-range/<range>")
-    class ProductGetByPriceInterval(Resource):
-        @api.doc('Get product based on price')
-        def get(self, range):
-            low_price, high_price = map(float, range.split('-'))
-            products = db_manager.product.GetPriceByInterval(low_price, high_price)
-            print(products)
-            return {"products":products}, 200
-            
-    @api.route("/")
-    class Product(Resource):
-        @api.doc("Get all products")
-        def get(self):
-            products = db_manager.product.GetAll()
-            return products, 200
+
 
         @jwt_required()
         @api.doc('Update new product', security='jsonWebToken')
         @api.expect(update_product_model)
-        def put(self):
-            product_ID = api.payload['id']
+        def put(self, id):
+            product_ID = id
             product_name = api.payload['name']
             product_price = api.payload['price']
             product_status = api.payload['status']
@@ -78,7 +54,7 @@ def create_api_product(db_manager):
         @jwt_required()
         @api.doc('Remove product', security='jsonWebToken')
         @api.expect(remove_product_model)
-        def delete(self):
+        def delete(self, id):
             ID = api.payload['id']
             result = db_manager.product.GetById(ID)
             if result == []:
@@ -87,6 +63,32 @@ def create_api_product(db_manager):
                 db_manager.product.UpdateItemStatus(ID, "Inactive")
             #result = db_manager.product.RemoveItem(ID)
             return jsonify({'Removed product': result})
+        
+    @api.route("price/<float:price>")
+    class ProductGetByPrice(Resource):
+        @api.doc('Get product based on price')
+        def get(self, price):
+            newPrice = float (price)
+            products = db_manager.product.GetByPrice(price)
+            print(products)
+            return {"products":products}, 200
+        
+    @api.route("/price-range/<float:range>")
+    class ProductGetByPriceInterval(Resource):
+        @api.doc('Get product based on price')
+        def get(self, range):
+            low_price, high_price = map(float, range.split('-'))
+            products = db_manager.product.GetPriceByInterval(low_price, high_price)
+            print(products)
+            return {"products":products}, 200
+            
+    @api.route("/")
+    class Product(Resource):
+        @api.doc("Get all products")
+        def get(self):
+            products = db_manager.product.GetAll()
+            return products, 200
+
 
         @jwt_required()
         @api.doc('New product', security='jsonWebToken')
@@ -95,10 +97,7 @@ def create_api_product(db_manager):
             product_id = api.payload['id']
             product_name = api.payload['name']
             product_price = api.payload['price']
-            #if(len(db_manager.product.GetById(product_id)) > 0):
-             #   return jsonify({"message": f"Product {product_id} already exists!"})
-            #else:
             result = db_manager.product.insertproduct(product_name, product_price)
-            return jsonify({'Added product': result})
+            return result, 201
     
     return api

@@ -22,6 +22,9 @@ class WarehuseInventoryModel:
         except Exception as e:
             print("Error getting LagerManger:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
 
     def GetByID(self, id):
@@ -35,6 +38,9 @@ class WarehuseInventoryModel:
         except Exception as e:
             print(f"Error finding lager_manager: {e}")
             return False
+        finally:
+            if conn is not None:
+                conn.close()
     
     def GetByProductID(self,produktID):
         
@@ -50,6 +56,9 @@ class WarehuseInventoryModel:
         except Exception as e:
             print("Error getting LagerManger by produktID:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
     def GetByWarehouseID(self,lagerID):
         
@@ -65,6 +74,9 @@ class WarehuseInventoryModel:
         except Exception as e:
             print("Error getting LagerManger by id:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
     def Insert(self,lagerID,produktID,antal):
         
@@ -87,6 +99,9 @@ class WarehuseInventoryModel:
         except Exception as e:
             print("Error inserting LagerManger:", e)
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def Update(self, id, lagerID, produktID, antal):
         try:           
@@ -109,6 +124,9 @@ class WarehuseInventoryModel:
         except Exception as e:
             print(f"Error updating LagerManger: {e}")
             return False
+        finally:
+            if conn is not None:
+                conn.close()
 
     def Delete(self, id):
         try:
@@ -121,6 +139,9 @@ class WarehuseInventoryModel:
         except Exception as e:
             print(f"Error deleting LagerManger: {e}")
             return False
+        finally:
+            if conn is not None:
+                conn.close()
         
 
     def _tuple2Dict(tuple):
