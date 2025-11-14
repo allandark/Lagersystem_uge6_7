@@ -1,0 +1,189 @@
+import mysql.connector
+
+class ProductModel:
+    
+    def __init__(self, db):
+        self.db = db 
+    
+    def GetAll(self):
+        
+        try:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT * FROM Produkts")
+
+                myresult = cursor.fetchall()
+                results = []
+                for r in myresult:
+                    results.append(self._totuple(r))
+                return results
+        except Exception as e:
+            print("Error getting product:", e)
+            return False
+        finally:
+            if conn is not None:
+                conn.close()
+
+    def GetById(self, id):
+        
+        try:
+            conn = self.db.get_connection()
+            with conn.cursor() as cursor:
+                cursor.execute(f"SELECT * FROM Produkts where produktID = %s ", (id,))
+                if(cursor.with_rows==True):
+                    myresult = (cursor.fetchall())
+                    return self._totuple(myresult[0])
+                else:
+                    myresult = cursor.fetchwarnings()
+                    return False
+                
+        except Exception as e:
+            print("Error getting product by id:", e)
+            return False
+        finally:
+            if conn is not None:
+                conn.close()
+
+    def GetByPrice(self, price):
+        
+        try:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute(f"SELECT * FROM Produkts where pris = %s ", (price,))
+
+                myresult = cursor.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting product by price:", e)
+            return False
+        finally:
+            if conn is not None:
+                conn.close()
+
+
+    def GetPriceByInterval(self, lov_price,high_price):
+        
+        try:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute(f"SELECT * FROM Produkts WHERE pris BETWEEN %s AND %s" , (lov_price,high_price))
+
+                myresult = cursor.fetchall()
+        
+            return myresult
+        except Exception as e:
+            print("Error getting product in price interval:", e)
+            return False
+        finally:
+            if conn is not None:
+                conn.close()
+            
+    def insertproduct(self, name, price):
+        
+        try:
+            conn = self.db.get_connection()
+            n_id = -1
+            with conn.cursor(dictionary=True) as cursor:
+                query = f"INSERT INTO Produkts (navn, pris) VALUES ('{name}', {price})"
+
+                cursor.execute(query)
+                n_id = cursor.lastrowid
+            conn.commit()
+            product = {
+                "id": n_id,
+                "name":  name,
+                "price": price
+            }
+            return product
+        except Exception as e:
+            print("Error inserting product:", e)
+            return False
+        finally:
+            if conn is not None:
+                conn.close()
+
+    def GetbyName(self, name):
+        
+        try:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute(f"SELECT * FROM Produkts where navn = %s ", (name,))
+
+                myresult = cursor.fetchall()
+            
+            return self._totuple(myresult)
+        except Exception as e:
+            print("Error getting product by name:", e)
+            return False
+        finally:
+            if conn is not None:
+                conn.close()
+    
+    def UpdateItemStatus(self, id, status):
+
+        try:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary=True) as cursor:
+                cursor.execute(f"UPDATE Produkts SET status = '{status}' WHERE produktID = {id}")
+                conn.commit()
+                myresult = self.GetById(id)
+
+            return self._totuple(myresult)
+        
+        except Exception as e:
+            print("Error removing product by ID:", e)
+            return False
+        finally:
+            if conn is not None:
+                conn.close()
+        
+    def UpdateProduct(self, id, navn, pris, status):
+
+        try:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary=True) as cursor:
+                command = f"UPDATE Produkts SET navn = '{navn}', pris = {pris}, status= '{status}' WHERE produktID = {id}"
+                cursor.execute(command)
+                conn.commit()
+            
+            return {
+                "id": id,
+                "name": navn,
+                "price": pris,
+                "status": status
+            }
+        except Exception as e:
+            print("Error updating product:", e)
+            return False
+        finally:
+            if conn is not None:
+                conn.close()
+
+    def exist(self,id):
+        try:
+            conn = self.db.get_connection()
+            with conn.cursor(dictionary = True) as cursor:
+                cursor.execute(f"SELECT exists(select 1 from Produkts where produktID = %s)AS id_exists ", (id,))
+
+                myresult = cursor.fetchall()
+
+                if myresult == [(0,)]:
+                    return False
+                else:
+                    return True
+        except Exception as e:
+            print("Error checking if product exist by id:", e)
+            return False
+        finally:
+            if conn is not None:
+                conn.close()
+        
+    def _totuple(self, myresult):
+        result = {
+                "id": myresult[0],
+                "price": myresult[1],
+                "name": myresult[2],
+                "status": myresult[3]
+            }
+        return result
