@@ -29,6 +29,15 @@ export function CustomerPage() {
                 if (id.length > 0) {
                     IdRef.current = id;
                     console.log(id);
+                    const results: DisplayItem[] = [];
+                    const customer = await getCustomers()
+                    const customerbyid =customer.find(item => item.id.toString() === IdRef.current)
+                    results.push({
+                        id: customerbyid.id,
+                        name: customerbyid.name,
+                        email: customerbyid.email,
+                    })
+                    setDisplayData(results)
                 }
             };
             fetchSearchBarData();
@@ -39,10 +48,11 @@ export function CustomerPage() {
                 <input
                     type="text"
                     className={styles.textbox}
-                    placeholder="Search data..."
+                    placeholder="Give an ID"
                     value={id}
                     onChange={(e) => {
                         setId(e.target.value);
+                        IdRef.current = e.target.value;
                     }}
                 />
             </div>

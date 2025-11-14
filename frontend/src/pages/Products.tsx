@@ -1,7 +1,8 @@
 import Layout from "../components/Layout";
-import type { WarehouseData, InventoryData, ProductData  } from "../types/Types";
-import { useState, useEffect } from 'react';
+import type {WarehouseData, InventoryData, ProductData} from "../types/Types";
+import {useState, useEffect, useRef} from 'react';
 import "./Products.css"
+import styles from "../components/SearchBar.module.css";
 
 
 interface DisplayItem {
@@ -15,9 +16,52 @@ interface DisplayItem {
 
 export default function ProductsPage() {
 
+    const IdRef = useRef('');
+
     const [displayData, setDisplayData] = useState<DisplayItem[]>([]);    
 
     const API_URL = import.meta.env.VITE_API_URL;
+
+    const SearchBar = () => {
+        const [id, setId] = useState('');
+        //const [suggestions, setSuggestions] = useState([]);
+
+        useEffect(() => {
+            const fetchSearchBarData = async () => {
+                if (id.length > 0) {
+                    IdRef.current = id;
+                    console.log(id);
+                    const results: DisplayItem[] = [];
+                    const products = await getProducts()
+                    const productbyid =products.find(item => item.id.toString() === IdRef.current)
+                    results.push({
+                        productName: productbyid.name,
+                        price: productbyid.price,
+                        quantity: 0,
+                        status: productbyid.status,
+                        location: "undefined",
+                    })
+                    setDisplayData(results)
+                }
+            };
+            fetchSearchBarData();
+        }, [id]);
+
+        return (
+            <div className={styles.container}>
+                <input
+                    type="text"
+                    className={styles.textbox}
+                    placeholder="Give an ID"
+                    value={id}
+                    onChange={(e) => {
+                        setId(e.target.value);
+                        IdRef.current = e.target.value;
+                    }}
+                />
+            </div>
+        );
+    };
 
     const getWarehouses = async () =>{
         try{
@@ -44,10 +88,17 @@ export default function ProductsPage() {
 
     const getProducts = async() =>{
         try{
-            const res = await fetch(`${API_URL}/api/product/`)
-            console.log(res)
-            const data: ProductData[] = await res.json()
-            return Array.isArray(data) ? data : [];
+            if (IdRef.current.length > 0) {
+                const res = await fetch(`${API_URL}/api/product/`)
+                const data: ProductData[] = await res.json()
+                return Array.isArray(data) ? data : [];
+            }
+            else
+            {
+                const res = await fetch(`${API_URL}/api/product/${IdRef.current}`)
+                const data: ProductData[] = await res.json()
+                return Array.isArray(data) ? data : [];
+            }
         }
         catch(error){
             console.log("Error fetching product:", error);
@@ -110,6 +161,7 @@ export default function ProductsPage() {
         <Layout>
 
             <div>
+                <SearchBar />
                 <h2>Inventory Overview</h2>
 
 
